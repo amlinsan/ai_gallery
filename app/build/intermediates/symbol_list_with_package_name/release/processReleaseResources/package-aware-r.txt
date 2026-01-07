@@ -1222,7 +1222,11 @@ attr yearStyle
 attr yearTodayStyle
 bool abc_action_bar_embed_tabs
 bool abc_config_actionMenuItemAllCaps
+bool enable_system_alarm_service_default
+bool enable_system_foreground_service_default
+bool enable_system_job_service_default
 bool mtrl_btn_textappearance_all_caps
+bool workmanager_test_configuration
 color abc_background_cache_hint_selector_material_dark
 color abc_background_cache_hint_selector_material_light
 color abc_btn_colored_borderless_text_material
@@ -2720,6 +2724,7 @@ id clip_horizontal
 id clip_vertical
 id clockwise
 id closest
+id coil_request_manager
 id collapseActionView
 id compatible
 id compress
@@ -2733,6 +2738,7 @@ id continuousVelocity
 id coordinator
 id cos
 id counterclockwise
+id cover_image
 id currentState
 id custom
 id customPanel
@@ -2777,6 +2783,8 @@ id edit_text_id
 id edittext_dropdown_editable
 id edittext_dropdown_noneditable
 id elastic
+id empty_message
+id empty_state
 id end
 id endToStart
 id enterAlways
@@ -2800,11 +2808,15 @@ id fitXY
 id fixed
 id flip
 id floating
+id folder_count
+id folder_list
+id folder_name
 id forever
 id fragment_container
 id fragment_container_view_tag
 id frost
 id fullscreen_header
+id gallery_fragment
 id ghost_view
 id ghost_view_holder
 id gone
@@ -2834,6 +2846,7 @@ id inference_time_val
 id info
 id invisible
 id inward
+id is_pooling_container_tag
 id italic
 id item_touch_helper_previous_elevation
 id jumpToEnd
@@ -2848,6 +2861,7 @@ id line3
 id linear
 id listMode
 id list_item
+id loading
 id locale
 id ltr
 id masked
@@ -2951,6 +2965,7 @@ id percent
 id performance
 id permissions_fragment
 id pin
+id pooling_container_listener_holder_tag
 id position
 id postLayout
 id progress_circular
@@ -2960,6 +2975,7 @@ id ratio
 id rectangles
 id recyclerview_results
 id report_drawn
+id request_permission_button
 id reverseSawtooth
 id right
 id rightToLeft
@@ -3228,10 +3244,12 @@ layout design_navigation_menu_item
 layout design_text_input_end_icon
 layout design_text_input_start_icon
 layout fragment_camera
+layout fragment_gallery
 layout ime_base_split_test_activity
 layout ime_secondary_split_test_activity
 layout info_bottom_sheet
 layout item_classification_result
+layout item_folder
 layout m3_alert_dialog
 layout m3_alert_dialog_actions
 layout m3_alert_dialog_title
@@ -3367,6 +3385,9 @@ string error_icon_content_description
 string exposed_dropdown_menu_content_description
 string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
+string gallery_empty_hint
+string gallery_permission_hint
+string gallery_request_permission
 string hide_bottom_view_on_scroll_behavior
 string icon_content_description
 string item_view_role_description

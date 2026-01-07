@@ -4,14 +4,14 @@
             "outputFile": "com.elink.aigallery.app-mergeReleaseResources-2:/values-v28/values-v28.xml",
             "map": [
                 {
-                    "source": "/root/.gradle/caches/transforms-4/98c3553a27f23c016726d88654c5e1c1/transformed/appcompat-1.4.2/res/values-v28/values-v28.xml",
+                    "source": "/root/.gradle/caches/transforms-4/aa1d1d4b825bdf861f76ec03472632fb/transformed/appcompat-1.6.1/res/values-v28/values-v28.xml",
                     "from": {
                         "startLines": "2,3,4,8",
                         "startColumns": "4,4,4,4",
-                        "startOffsets": "55,130,217,447",
+                        "startOffsets": "55,130,217,397",
                         "endLines": "2,3,7,11",
                         "endColumns": "74,86,12,12",
-                        "endOffsets": "125,212,442,684"
+                        "endOffsets": "125,212,392,584"
                     },
                     "to": {
                         "startLines": "14,15,16,20",

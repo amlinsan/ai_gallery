@@ -36,6 +36,9 @@
     <string name="label_threads">Number of Threads</string>
     <string name="label_delegate">Delegate</string>
     <string name="label_models">ML Model</string>
+    <string name="gallery_permission_hint">需要授权才能访问相册</string>
+    <string name="gallery_empty_hint">暂无图片</string>
+    <string name="gallery_request_permission">授权并进入相册</string>
 
     <string-array name="delegate_spinner_titles">
         <item>CPU</item>

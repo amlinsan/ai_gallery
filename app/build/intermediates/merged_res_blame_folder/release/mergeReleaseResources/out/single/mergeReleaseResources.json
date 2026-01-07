@@ -1,114 +1,130 @@
 [
     {
-        "merged": "com.elink.aigallery.app-release-4:/layout_fragment_camera.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/layout/fragment_camera.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-mdpi/ic_launcher.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xxxhdpi_ic_launcher.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xxxhdpi/ic_launcher.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xxxhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-mdpi_ic_launcher.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-mdpi/ic_launcher.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xxxhdpi/ic_launcher.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xxhdpi/ic_launcher_foreground.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/drawable_ic_plus.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/drawable/ic_plus.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/layout_info_bottom_sheet.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/layout/info_bottom_sheet.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-hdpi_ic_launcher_round.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-hdpi/ic_launcher_round.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/color_selector_ic.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/color/selector_ic.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xhdpi/ic_launcher.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/layout_item_folder.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/layout/item_folder.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xxxhdpi_ic_launcher_round.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xxxhdpi/ic_launcher_round.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-anydpi-v26/ic_launcher.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-mdpi_ic_launcher_foreground.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-mdpi/ic_launcher_foreground.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/drawable-v24_tfl_logo.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/drawable-v24/tfl_logo.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xxhdpi_ic_launcher.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xxhdpi/ic_launcher.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/drawable-anydpi-v24_ic_launcher_foreground.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-pngs-0:/drawable-anydpi-v24/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xhdpi_ic_launcher_round.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xhdpi/ic_launcher_round.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-hdpi/ic_launcher.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-hdpi_ic_launcher_round.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-hdpi/ic_launcher_round.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/layout_item_classification_result.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/layout/item_classification_result.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xhdpi_ic_launcher.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xhdpi/ic_launcher.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-mdpi_ic_launcher_round.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-mdpi/ic_launcher_round.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/layout_activity_main.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/layout/activity_main.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-mdpi_ic_launcher_foreground.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-mdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/drawable-v24_tfl_logo.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/drawable-v24/tfl_logo.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xxhdpi_ic_launcher_foreground.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xxhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/drawable_ic_minus.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/drawable/ic_minus.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xxhdpi/ic_launcher.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-mdpi_ic_launcher_round.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-mdpi/ic_launcher_round.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-hdpi_ic_launcher_foreground.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-hdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/drawable_icn_chevron_up.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/drawable/icn_chevron_up.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/navigation_nav_graph.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/navigation/nav_graph.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/drawable_ic_plus.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/drawable/ic_plus.xml"
+        "merged": "com.elink.aigallery.app-release-4:/layout_fragment_gallery.xml.flat",
+        "source": "com.elink.aigallery.app-main-5:/layout/fragment_gallery.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xhdpi_ic_launcher_foreground.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xhdpi/ic_launcher_foreground.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/color_selector_ic.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/color/selector_ic.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-hdpi_ic_launcher.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-hdpi/ic_launcher.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/layout_info_bottom_sheet.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/layout/info_bottom_sheet.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xxhdpi_ic_launcher_round.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xxhdpi/ic_launcher_round.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xxxhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/drawable-anydpi-v24_ic_launcher_foreground.xml.flat",
-        "source": "com.elink.aigallery.app-pngs-0:/drawable-anydpi-v24/ic_launcher_foreground.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xhdpi_ic_launcher_foreground.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xhdpi/ic_launcher_foreground.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-hdpi_ic_launcher_foreground.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-hdpi/ic_launcher_foreground.png"
+        "merged": "com.elink.aigallery.app-release-4:/layout_item_folder.xml.flat",
+        "source": "com.elink.aigallery.app-main-5:/layout/item_folder.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/layout_fragment_gallery.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/layout/fragment_gallery.xml"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/mipmap-xxxhdpi_ic_launcher_foreground.png.flat",
-        "source": "com.elink.aigallery.app-main-5:/mipmap-xxxhdpi/ic_launcher_foreground.png"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xhdpi_ic_launcher_round.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/navigation_nav_graph.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/navigation/nav_graph.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-xxhdpi_ic_launcher_round.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-xxhdpi/ic_launcher_round.png"
     },
     {
-        "merged": "com.elink.aigallery.app-release-4:/layout_item_classification_result.xml.flat",
-        "source": "com.elink.aigallery.app-main-5:/layout/item_classification_result.xml"
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/layout_fragment_camera.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/layout/fragment_camera.xml"
+    },
+    {
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/layout_activity_main.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/layout/activity_main.xml"
+    },
+    {
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/drawable_icn_chevron_up.png.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/drawable/icn_chevron_up.png"
+    },
+    {
+        "merged": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-release-4:/drawable_ic_minus.xml.flat",
+        "source": "/root/.gradle/daemon/8.6/com.elink.aigallery.app-main-5:/drawable/ic_minus.xml"
     }
 ]

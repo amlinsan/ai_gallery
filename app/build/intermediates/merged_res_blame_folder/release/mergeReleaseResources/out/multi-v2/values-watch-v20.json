@@ -4,7 +4,7 @@
             "outputFile": "com.elink.aigallery.app-mergeReleaseResources-2:/values-watch-v20/values-watch-v20.xml",
             "map": [
                 {
-                    "source": "/root/.gradle/caches/transforms-4/98c3553a27f23c016726d88654c5e1c1/transformed/appcompat-1.4.2/res/values-watch-v20/values-watch-v20.xml",
+                    "source": "/root/.gradle/caches/transforms-4/aa1d1d4b825bdf861f76ec03472632fb/transformed/appcompat-1.6.1/res/values-watch-v20/values-watch-v20.xml",
                     "from": {
                         "startLines": "2,5,8",
                         "startColumns": "4,4,4",

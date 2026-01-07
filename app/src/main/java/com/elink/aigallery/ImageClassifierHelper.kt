@@ -40,6 +40,7 @@ class ImageClassifierHelper(
     val imageClassifierListener: ClassifierListener?
 ) {
     private var imageClassifier: ImageClassifier? = null
+    private val classifierLock = Any()
 
     init {
         setupImageClassifier()
@@ -125,6 +126,23 @@ class ImageClassifierHelper(
         )
     }
 
+    fun classifyLabels(image: Bitmap): List<String> {
+        synchronized(classifierLock) {
+            if (imageClassifier == null) {
+                setupImageClassifier()
+            }
+            val imageProcessor = ImageProcessor.Builder().build()
+            val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
+            val results = imageClassifier?.classify(tensorImage).orEmpty()
+            return results
+                .flatMap { it.categories }
+                .sortedByDescending { it.score }
+                .map { it.label }
+                .distinct()
+                .take(maxResults)
+        }
+    }
+
     // Receive the device rotation (Surface.x values range from 0->3) and return EXIF orientation
     // http://jpegclub.org/exif_orientation.html
     private fun getOrientationFromRotation(rotation: Int) : ImageProcessingOptions.Orientation {
@@ -158,5 +176,17 @@ class ImageClassifierHelper(
         const val MODEL_EFFICIENTNETV2 = 3
 
         private const val TAG = "ImageClassifierHelper"
+
+        @Volatile
+        private var INSTANCE: ImageClassifierHelper? = null
+
+        fun getSharedInstance(context: Context): ImageClassifierHelper {
+            return INSTANCE ?: synchronized(this) {
+                INSTANCE ?: ImageClassifierHelper(
+                    context = context.applicationContext,
+                    imageClassifierListener = null
+                ).also { INSTANCE = it }
+            }
+        }
     }
 }
