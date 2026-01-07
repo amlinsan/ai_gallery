@@ -1,0 +1,207 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<!--
+3    ~ Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+4    ~
+5    ~ Licensed under the Apache License, Version 2.0 (the "License");
+6    ~ you may not use this file except in compliance with the License.
+7    ~ You may obtain a copy of the License at
+8    ~
+9    ~       http://www.apache.org/licenses/LICENSE-2.0
+10    ~
+11    ~ Unless required by applicable law or agreed to in writing, software
+12    ~ distributed under the License is distributed on an "AS IS" BASIS,
+13    ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+14    ~ See the License for the specific language governing permissions and
+15    ~ limitations under the License.
+16-->
+17<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+18    xmlns:dist="http://schemas.android.com/apk/distribution"
+19    package="com.elink.aigallery"
+20    android:versionCode="1"
+21    android:versionName="1.0" >
+22
+23    <uses-sdk
+24        android:minSdkVersion="23"
+25        android:targetSdkVersion="34" />
+26
+27    <!-- Enable instant app support -->
+28    <dist:module dist:instant="true" />
+28-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:23:5-40
+28-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:23:18-37
+29
+30    <!-- Declare features -->
+31    <uses-feature android:name="android.hardware.camera" />
+31-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:26:5-60
+31-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:26:19-57
+32
+33    <!-- Declare permissions -->
+34    <uses-permission android:name="android.permission.CAMERA" />
+34-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:29:5-65
+34-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:29:22-62
+35
+36    <permission
+36-->[androidx.core:core:1.12.0] /root/.gradle/caches/transforms-4/28c8dbd928c667a7eddc5dc958ae45e5/transformed/core-1.12.0/AndroidManifest.xml:22:5-24:47
+37        android:name="com.elink.aigallery.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+37-->[androidx.core:core:1.12.0] /root/.gradle/caches/transforms-4/28c8dbd928c667a7eddc5dc958ae45e5/transformed/core-1.12.0/AndroidManifest.xml:23:9-81
+38        android:protectionLevel="signature" />
+38-->[androidx.core:core:1.12.0] /root/.gradle/caches/transforms-4/28c8dbd928c667a7eddc5dc958ae45e5/transformed/core-1.12.0/AndroidManifest.xml:24:9-44
+39
+40    <uses-permission android:name="com.elink.aigallery.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+40-->[androidx.core:core:1.12.0] /root/.gradle/caches/transforms-4/28c8dbd928c667a7eddc5dc958ae45e5/transformed/core-1.12.0/AndroidManifest.xml:26:5-97
+40-->[androidx.core:core:1.12.0] /root/.gradle/caches/transforms-4/28c8dbd928c667a7eddc5dc958ae45e5/transformed/core-1.12.0/AndroidManifest.xml:26:22-94
+41    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+42    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+43    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+44
+45    <application
+45-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:31:5-62:19
+46        android:allowBackup="true"
+46-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:32:9-35
+47        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+47-->[androidx.core:core:1.12.0] /root/.gradle/caches/transforms-4/28c8dbd928c667a7eddc5dc958ae45e5/transformed/core-1.12.0/AndroidManifest.xml:28:18-86
+48        android:extractNativeLibs="false"
+49        android:icon="@mipmap/ic_launcher"
+49-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:33:9-43
+50        android:label="@string/app_name"
+50-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:34:9-41
+51        android:roundIcon="@mipmap/ic_launcher_round"
+51-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:35:9-54
+52        android:supportsRtl="true"
+52-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:36:9-35
+53        android:taskAffinity="" >
+53-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:37:9-32
+54        <activity
+54-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:40:9-61:20
+55            android:name="com.elink.aigallery.MainActivity"
+55-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:41:13-41
+56            android:clearTaskOnLaunch="true"
+56-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:42:13-45
+57            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
+57-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:43:13-91
+58            android:exported="true"
+58-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:44:13-36
+59            android:resizeableActivity="true"
+59-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:45:13-46
+60            android:rotationAnimation="seamless"
+60-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:46:13-49
+61            android:theme="@style/AppTheme" >
+61-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:47:13-44
+62
+63            <!-- Main app intent filter -->
+64            <intent-filter>
+64-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:51:13-55:29
+65                <action android:name="android.intent.action.MAIN" />
+65-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:52:17-69
+65-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:52:25-66
+66
+67                <category android:name="android.intent.category.LAUNCHER" />
+67-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:54:17-77
+67-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:54:27-74
+68            </intent-filter>
+69
+70            <!-- Declare notch support -->
+71            <meta-data
+71-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:58:13-60:40
+72                android:name="android.notch_support"
+72-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:59:17-53
+73                android:value="true" />
+73-->/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/src/main/AndroidManifest.xml:60:17-37
+74        </activity>
+75
+76        <service
+76-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:25:9-34:19
+77            android:name="androidx.camera.core.impl.MetadataHolderService"
+77-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:26:13-75
+78            android:enabled="false"
+78-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:27:13-36
+79            android:exported="false" >
+79-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:28:13-37
+80            <meta-data
+80-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:31:13-33:89
+81                android:name="androidx.camera.core.impl.MetadataHolderService.DEFAULT_CONFIG_PROVIDER"
+81-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:32:17-103
+82                android:value="androidx.camera.camera2.Camera2Config$DefaultProvider" />
+82-->[androidx.camera:camera-camera2:1.2.0-alpha02] /root/.gradle/caches/transforms-4/55180851055e0d0ddc3617fc83926389/transformed/camera-camera2-1.2.0-alpha02/AndroidManifest.xml:33:17-86
+83        </service>
+84
+85        <provider
+85-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:26:9-34:20
+86            android:name="androidx.startup.InitializationProvider"
+86-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:27:13-67
+87            android:authorities="com.elink.aigallery.androidx-startup"
+87-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:28:13-68
+88            android:exported="false" >
+88-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:29:13-37
+89            <meta-data
+89-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:31:13-33:52
+90                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+90-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:32:17-75
+91                android:value="androidx.startup" />
+91-->[androidx.emoji2:emoji2:1.0.0] /root/.gradle/caches/transforms-4/5085d93c5ee08b7dead1059f5d2f4e87/transformed/emoji2-1.0.0/AndroidManifest.xml:33:17-49
+92            <meta-data
+92-->[androidx.lifecycle:lifecycle-process:2.6.2] /root/.gradle/caches/transforms-4/044a553ec5b59e66d0e64c0efc22b1ac/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+93                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+93-->[androidx.lifecycle:lifecycle-process:2.6.2] /root/.gradle/caches/transforms-4/044a553ec5b59e66d0e64c0efc22b1ac/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+94                android:value="androidx.startup" />
+94-->[androidx.lifecycle:lifecycle-process:2.6.2] /root/.gradle/caches/transforms-4/044a553ec5b59e66d0e64c0efc22b1ac/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+95            <meta-data
+95-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:29:13-31:52
+96                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+96-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:30:17-85
+97                android:value="androidx.startup" />
+97-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:31:17-49
+98        </provider>
+99
+100        <uses-library
+100-->[androidx.window:window:1.1.0-alpha02] /root/.gradle/caches/transforms-4/fcb02044cd8d9cda18cfc85f5ccb1e99/transformed/window-1.1.0-alpha02/AndroidManifest.xml:25:9-27:40
+101            android:name="androidx.window.extensions"
+101-->[androidx.window:window:1.1.0-alpha02] /root/.gradle/caches/transforms-4/fcb02044cd8d9cda18cfc85f5ccb1e99/transformed/window-1.1.0-alpha02/AndroidManifest.xml:26:13-54
+102            android:required="false" />
+102-->[androidx.window:window:1.1.0-alpha02] /root/.gradle/caches/transforms-4/fcb02044cd8d9cda18cfc85f5ccb1e99/transformed/window-1.1.0-alpha02/AndroidManifest.xml:27:13-37
+103        <uses-library
+103-->[androidx.window:window:1.1.0-alpha02] /root/.gradle/caches/transforms-4/fcb02044cd8d9cda18cfc85f5ccb1e99/transformed/window-1.1.0-alpha02/AndroidManifest.xml:28:9-30:40
+104            android:name="androidx.window.sidecar"
+104-->[androidx.window:window:1.1.0-alpha02] /root/.gradle/caches/transforms-4/fcb02044cd8d9cda18cfc85f5ccb1e99/transformed/window-1.1.0-alpha02/AndroidManifest.xml:29:13-51
+105            android:required="false" />
+105-->[androidx.window:window:1.1.0-alpha02] /root/.gradle/caches/transforms-4/fcb02044cd8d9cda18cfc85f5ccb1e99/transformed/window-1.1.0-alpha02/AndroidManifest.xml:30:13-37
+106
+107        <receiver
+107-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:34:9-52:20
+108            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+108-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:35:13-76
+109            android:directBootAware="false"
+109-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:36:13-44
+110            android:enabled="true"
+110-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:37:13-35
+111            android:exported="true"
+111-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:38:13-36
+112            android:permission="android.permission.DUMP" >
+112-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:39:13-57
+113            <intent-filter>
+113-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:40:13-42:29
+114                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+114-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:17-91
+114-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:41:25-88
+115            </intent-filter>
+116            <intent-filter>
+116-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:43:13-45:29
+117                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+117-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:17-85
+117-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:44:25-82
+118            </intent-filter>
+119            <intent-filter>
+119-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:46:13-48:29
+120                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+120-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:17-88
+120-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:47:25-85
+121            </intent-filter>
+122            <intent-filter>
+122-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:49:13-51:29
+123                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+123-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:17-95
+123-->[androidx.profileinstaller:profileinstaller:1.3.0] /root/.gradle/caches/transforms-4/5266d80352f797b182749dd348536368/transformed/profileinstaller-1.3.0/AndroidManifest.xml:50:25-92
+124            </intent-filter>
+125        </receiver>
+126    </application>
+127
+128</manifest>

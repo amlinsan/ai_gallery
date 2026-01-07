@@ -1,0 +1,10 @@
+#Wed Jan 07 17:34:59 CST 2026
+base.0=/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/build/intermediates/dex/release/mergeDexRelease/classes.dex
+base.1=/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/build/intermediates/global_synthetics_dex/release/mergeReleaseGlobalSynthetics/classes.dex
+base.2=/media/ssd_1T/11-codex/31-AI应用/ElinkAIGallery/ElinkAIGallery/app/build/intermediates/dex/release/mergeDexRelease/classes2.dex
+path.0=classes.dex
+path.1=classes.dex
+path.2=classes2.dex
+renamed.0=classes.dex
+renamed.1=classes2.dex
+renamed.2=classes3.dex

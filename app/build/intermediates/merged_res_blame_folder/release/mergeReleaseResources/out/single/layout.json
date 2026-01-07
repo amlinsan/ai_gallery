@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "com.elink.aigallery.app-mergeReleaseResources-3:/layout/activity_main.xml",
+        "source": "com.elink.aigallery.app-main-5:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.elink.aigallery.app-mergeReleaseResources-3:/layout/fragment_camera.xml",
+        "source": "com.elink.aigallery.app-main-5:/layout/fragment_camera.xml"
+    },
+    {
+        "merged": "com.elink.aigallery.app-mergeReleaseResources-3:/layout/info_bottom_sheet.xml",
+        "source": "com.elink.aigallery.app-main-5:/layout/info_bottom_sheet.xml"
+    },
+    {
+        "merged": "com.elink.aigallery.app-mergeReleaseResources-3:/layout/item_classification_result.xml",
+        "source": "com.elink.aigallery.app-main-5:/layout/item_classification_result.xml"
+    }
+]
