@@ -5,23 +5,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewbinding.ViewBinding;
 import androidx.viewbinding.ViewBindings;
 import com.elink.aigallery.R;
+import com.google.android.material.tabs.TabLayout;
 import java.lang.NullPointerException;
 import java.lang.Override;
 import java.lang.String;
 
 public final class FragmentGalleryBinding implements ViewBinding {
   @NonNull
-  private final FrameLayout rootView;
+  private final LinearLayout rootView;
+
+  @NonNull
+  public final RecyclerView contentList;
 
   @NonNull
   public final TextView emptyMessage;
@@ -30,28 +34,34 @@ public final class FragmentGalleryBinding implements ViewBinding {
   public final LinearLayout emptyState;
 
   @NonNull
-  public final RecyclerView folderList;
-
-  @NonNull
   public final ProgressBar loading;
 
   @NonNull
   public final Button requestPermissionButton;
 
-  private FragmentGalleryBinding(@NonNull FrameLayout rootView, @NonNull TextView emptyMessage,
-      @NonNull LinearLayout emptyState, @NonNull RecyclerView folderList,
-      @NonNull ProgressBar loading, @NonNull Button requestPermissionButton) {
+  @NonNull
+  public final SearchView searchView;
+
+  @NonNull
+  public final TabLayout tabLayout;
+
+  private FragmentGalleryBinding(@NonNull LinearLayout rootView, @NonNull RecyclerView contentList,
+      @NonNull TextView emptyMessage, @NonNull LinearLayout emptyState,
+      @NonNull ProgressBar loading, @NonNull Button requestPermissionButton,
+      @NonNull SearchView searchView, @NonNull TabLayout tabLayout) {
     this.rootView = rootView;
+    this.contentList = contentList;
     this.emptyMessage = emptyMessage;
     this.emptyState = emptyState;
-    this.folderList = folderList;
     this.loading = loading;
     this.requestPermissionButton = requestPermissionButton;
+    this.searchView = searchView;
+    this.tabLayout = tabLayout;
   }
 
   @Override
   @NonNull
-  public FrameLayout getRoot() {
+  public LinearLayout getRoot() {
     return rootView;
   }
 
@@ -76,6 +86,12 @@ public final class FragmentGalleryBinding implements ViewBinding {
     // This is done to optimize the compiled bytecode for size and performance.
     int id;
     missingId: {
+      id = R.id.content_list;
+      RecyclerView contentList = ViewBindings.findChildViewById(rootView, id);
+      if (contentList == null) {
+        break missingId;
+      }
+
       id = R.id.empty_message;
       TextView emptyMessage = ViewBindings.findChildViewById(rootView, id);
       if (emptyMessage == null) {
@@ -85,12 +101,6 @@ public final class FragmentGalleryBinding implements ViewBinding {
       id = R.id.empty_state;
       LinearLayout emptyState = ViewBindings.findChildViewById(rootView, id);
       if (emptyState == null) {
-        break missingId;
-      }
-
-      id = R.id.folder_list;
-      RecyclerView folderList = ViewBindings.findChildViewById(rootView, id);
-      if (folderList == null) {
         break missingId;
       }
 
@@ -106,8 +116,20 @@ public final class FragmentGalleryBinding implements ViewBinding {
         break missingId;
       }
 
-      return new FragmentGalleryBinding((FrameLayout) rootView, emptyMessage, emptyState,
-          folderList, loading, requestPermissionButton);
+      id = R.id.search_view;
+      SearchView searchView = ViewBindings.findChildViewById(rootView, id);
+      if (searchView == null) {
+        break missingId;
+      }
+
+      id = R.id.tab_layout;
+      TabLayout tabLayout = ViewBindings.findChildViewById(rootView, id);
+      if (tabLayout == null) {
+        break missingId;
+      }
+
+      return new FragmentGalleryBinding((LinearLayout) rootView, contentList, emptyMessage,
+          emptyState, loading, requestPermissionButton, searchView, tabLayout);
     }
     String missingId = rootView.getResources().getResourceName(id);
     throw new NullPointerException("Missing required view with ID: ".concat(missingId));

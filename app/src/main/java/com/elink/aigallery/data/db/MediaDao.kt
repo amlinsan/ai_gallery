@@ -44,4 +44,25 @@ interface MediaDao {
         """
     )
     suspend fun getUntaggedImages(limit: Int): List<MediaItem>
+
+    @Query(
+        """
+        SELECT m.* FROM media_items AS m
+        LEFT JOIN media_face_analysis AS f ON m.id = f.mediaId
+        WHERE f.mediaId IS NULL
+        ORDER BY m.dateTaken DESC
+        LIMIT :limit
+        """
+    )
+    suspend fun getImagesWithoutFaceAnalysis(limit: Int): List<MediaItem>
+
+    @Query(
+        """
+        SELECT DISTINCT m.* FROM media_items AS m
+        INNER JOIN image_tags AS t ON m.id = t.mediaId
+        WHERE t.label = :label
+        ORDER BY m.dateTaken DESC
+        """
+    )
+    fun getImagesByLabel(label: String): Flow<List<MediaItem>>
 }

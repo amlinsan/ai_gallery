@@ -1,8 +1,8 @@
 <variant
     name="release"
     package="com.elink.aigallery"
-    minSdkVersion="23"
-    targetSdkVersion="34"
+    minSdkVersion="24"
+    targetSdkVersion="35"
     mergedManifest="build/intermediates/merged_manifest/release/processReleaseMainManifest/AndroidManifest.xml"
     manifestMergeReport="build/outputs/logs/manifest-merger-release-report.txt"
     proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-8.3.2:proguard-rules.pro"
@@ -27,6 +27,6 @@
       applicationId="com.elink.aigallery"
       generatedSourceFolders="build/generated/source/navigation-args/release:build/generated/source/kapt/release:build/generated/ap_generated_sources/release/out:build/generated/data_binding_base_class_source_out/release/out"
       generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/root/.gradle/caches/transforms-4/59f866da169248e3c2584bc26370d564/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/root/amlinsan_ubuntu/opt/android-studio-2025.1.2.11-linux/android-studio/jbr/caches/transforms-4/59f866da169248e3c2584bc26370d564/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

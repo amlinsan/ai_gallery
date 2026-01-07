@@ -21,7 +21,7 @@ import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.util.Log
+import com.elink.aigallery.utils.MyLog
 import android.view.*
 import android.widget.AdapterView
 import android.widget.Toast
@@ -46,7 +46,7 @@ import java.util.concurrent.Executors
 class CameraFragment : Fragment(), ImageClassifierHelper.ClassifierListener {
 
     companion object {
-        private const val TAG = "Image Classifier"
+        private const val TAG = "CameraFragment"
     }
 
     private var _fragmentCameraBinding: FragmentCameraBinding? = null
@@ -298,7 +298,7 @@ class CameraFragment : Fragment(), ImageClassifierHelper.ClassifierListener {
             // Attach the viewfinder's surface provider to preview use case
             preview?.setSurfaceProvider(fragmentCameraBinding.viewFinder.surfaceProvider)
         } catch (exc: Exception) {
-            Log.e(TAG, "Use case binding failed", exc)
+            MyLog.e(TAG, "Use case binding failed", exc)
         }
     }
 

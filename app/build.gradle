@@ -24,12 +24,12 @@ plugins {
 
 android {
     namespace "com.elink.aigallery"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId "com.elink.aigallery"
-        minSdk = 23
-        targetSdk = 34
+        minSdk = 24
+        targetSdk = 35
         versionCode 1
         versionName "1.0"
 
@@ -134,6 +134,12 @@ dependencies {
 
     // WorkManager
     implementation "androidx.work:work-runtime-ktx:2.9.0"
+
+    // ML Kit (on-device face detection)
+    implementation "com.google.mlkit:face-detection:16.1.5"
+
+    // TFLite runtime (for face embedding)
+    implementation "org.tensorflow:tensorflow-lite:2.9.0"
 
     // Lifecycle + RecyclerView
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"

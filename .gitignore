@@ -1,0 +1,35 @@
+# Gradle
+.gradle/
+**/build/
+
+# Local configuration
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# Logs
+*.log
+
+# Compiled outputs
+*.class
+*.dex
+
+# APKs / AABs
+*.apk
+*.aab
+*.ap_
+*.aab~
+
+# Keystore files (keep out of VCS)
+*.jks
+*.keystore
+*.pkcs12
+
+# OS / editor
+.DS_Store
+.vscode/

@@ -1,6 +1,6 @@
 package com.elink.aigallery;
 
-@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000D\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\n\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u0000 ,2\u00020\u0001:\u0002+,BI\u0012\b\b\u0002\u0010\u0002\u001a\u00020\u0003\u0012\b\b\u0002\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0006\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0007\u001a\u00020\u0005\u0012\b\b\u0002\u0010\b\u001a\u00020\u0005\u0012\u0006\u0010\t\u001a\u00020\n\u0012\b\u0010\u000b\u001a\u0004\u0018\u00010\f\u00a2\u0006\u0002\u0010\rJ\u0016\u0010\"\u001a\u00020#2\u0006\u0010$\u001a\u00020%2\u0006\u0010&\u001a\u00020\u0005J\u0006\u0010\'\u001a\u00020#J\u0010\u0010(\u001a\u00020)2\u0006\u0010&\u001a\u00020\u0005H\u0002J\b\u0010*\u001a\u00020#H\u0002R\u0011\u0010\t\u001a\u00020\n\u00a2\u0006\b\n\u0000\u001a\u0004\b\u000e\u0010\u000fR\u001a\u0010\u0007\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0010\u0010\u0011\"\u0004\b\u0012\u0010\u0013R\u001a\u0010\b\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0014\u0010\u0011\"\u0004\b\u0015\u0010\u0013R\u0010\u0010\u0016\u001a\u0004\u0018\u00010\u0017X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0013\u0010\u000b\u001a\u0004\u0018\u00010\f\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0018\u0010\u0019R\u001a\u0010\u0006\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001a\u0010\u0011\"\u0004\b\u001b\u0010\u0013R\u001a\u0010\u0004\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001c\u0010\u0011\"\u0004\b\u001d\u0010\u0013R\u001a\u0010\u0002\u001a\u00020\u0003X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001e\u0010\u001f\"\u0004\b \u0010!\u00a8\u0006-"}, d2 = {"Lcom/elink/aigallery/ImageClassifierHelper;", "", "threshold", "", "numThreads", "", "maxResults", "currentDelegate", "currentModel", "context", "Landroid/content/Context;", "imageClassifierListener", "Lcom/elink/aigallery/ImageClassifierHelper$ClassifierListener;", "(FIIIILandroid/content/Context;Lcom/elink/aigallery/ImageClassifierHelper$ClassifierListener;)V", "getContext", "()Landroid/content/Context;", "getCurrentDelegate", "()I", "setCurrentDelegate", "(I)V", "getCurrentModel", "setCurrentModel", "imageClassifier", "Lorg/tensorflow/lite/task/vision/classifier/ImageClassifier;", "getImageClassifierListener", "()Lcom/elink/aigallery/ImageClassifierHelper$ClassifierListener;", "getMaxResults", "setMaxResults", "getNumThreads", "setNumThreads", "getThreshold", "()F", "setThreshold", "(F)V", "classify", "", "image", "Landroid/graphics/Bitmap;", "rotation", "clearImageClassifier", "getOrientationFromRotation", "Lorg/tensorflow/lite/task/core/vision/ImageProcessingOptions$Orientation;", "setupImageClassifier", "ClassifierListener", "Companion", "app_release"})
+@kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000P\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0000\n\u0002\u0010\u0007\n\u0000\n\u0002\u0010\b\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0018\u0002\n\u0002\b\u000b\n\u0002\u0010\u0002\n\u0000\n\u0002\u0018\u0002\n\u0002\b\u0002\n\u0002\u0010 \n\u0002\u0010\u000e\n\u0002\b\u0004\n\u0002\u0018\u0002\n\u0002\b\u0004\u0018\u0000 22\u00020\u0001:\u000212BI\u0012\b\b\u0002\u0010\u0002\u001a\u00020\u0003\u0012\b\b\u0002\u0010\u0004\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0006\u001a\u00020\u0005\u0012\b\b\u0002\u0010\u0007\u001a\u00020\u0005\u0012\b\b\u0002\u0010\b\u001a\u00020\u0005\u0012\u0006\u0010\t\u001a\u00020\n\u0012\b\u0010\u000b\u001a\u0004\u0018\u00010\f\u00a2\u0006\u0002\u0010\rJ\u0016\u0010#\u001a\u00020$2\u0006\u0010%\u001a\u00020&2\u0006\u0010\'\u001a\u00020\u0005J\u0014\u0010(\u001a\b\u0012\u0004\u0012\u00020*0)2\u0006\u0010%\u001a\u00020&J\u0006\u0010+\u001a\u00020$J\u0010\u0010,\u001a\u00020&2\u0006\u0010-\u001a\u00020&H\u0002J\u0010\u0010.\u001a\u00020/2\u0006\u0010\'\u001a\u00020\u0005H\u0002J\b\u00100\u001a\u00020$H\u0002R\u000e\u0010\u000e\u001a\u00020\u0001X\u0082\u0004\u00a2\u0006\u0002\n\u0000R\u0011\u0010\t\u001a\u00020\n\u00a2\u0006\b\n\u0000\u001a\u0004\b\u000f\u0010\u0010R\u001a\u0010\u0007\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0011\u0010\u0012\"\u0004\b\u0013\u0010\u0014R\u001a\u0010\b\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u0015\u0010\u0012\"\u0004\b\u0016\u0010\u0014R\u0010\u0010\u0017\u001a\u0004\u0018\u00010\u0018X\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u0013\u0010\u000b\u001a\u0004\u0018\u00010\f\u00a2\u0006\b\n\u0000\u001a\u0004\b\u0019\u0010\u001aR\u001a\u0010\u0006\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001b\u0010\u0012\"\u0004\b\u001c\u0010\u0014R\u001a\u0010\u0004\u001a\u00020\u0005X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001d\u0010\u0012\"\u0004\b\u001e\u0010\u0014R\u001a\u0010\u0002\u001a\u00020\u0003X\u0086\u000e\u00a2\u0006\u000e\n\u0000\u001a\u0004\b\u001f\u0010 \"\u0004\b!\u0010\"\u00a8\u00063"}, d2 = {"Lcom/elink/aigallery/ImageClassifierHelper;", "", "threshold", "", "numThreads", "", "maxResults", "currentDelegate", "currentModel", "context", "Landroid/content/Context;", "imageClassifierListener", "Lcom/elink/aigallery/ImageClassifierHelper$ClassifierListener;", "(FIIIILandroid/content/Context;Lcom/elink/aigallery/ImageClassifierHelper$ClassifierListener;)V", "classifierLock", "getContext", "()Landroid/content/Context;", "getCurrentDelegate", "()I", "setCurrentDelegate", "(I)V", "getCurrentModel", "setCurrentModel", "imageClassifier", "Lorg/tensorflow/lite/task/vision/classifier/ImageClassifier;", "getImageClassifierListener", "()Lcom/elink/aigallery/ImageClassifierHelper$ClassifierListener;", "getMaxResults", "setMaxResults", "getNumThreads", "setNumThreads", "getThreshold", "()F", "setThreshold", "(F)V", "classify", "", "image", "Landroid/graphics/Bitmap;", "rotation", "classifyLabels", "", "", "clearImageClassifier", "ensureArgbBitmap", "bitmap", "getOrientationFromRotation", "Lorg/tensorflow/lite/task/core/vision/ImageProcessingOptions$Orientation;", "setupImageClassifier", "ClassifierListener", "Companion", "app_release"})
 public final class ImageClassifierHelper {
     private float threshold;
     private int numThreads;
@@ -13,6 +13,8 @@ public final class ImageClassifierHelper {
     private final com.elink.aigallery.ImageClassifierHelper.ClassifierListener imageClassifierListener = null;
     @org.jetbrains.annotations.Nullable()
     private org.tensorflow.lite.task.vision.classifier.ImageClassifier imageClassifier;
+    @org.jetbrains.annotations.NotNull()
+    private final java.lang.Object classifierLock = null;
     public static final int DELEGATE_CPU = 0;
     public static final int DELEGATE_GPU = 1;
     public static final int DELEGATE_NNAPI = 2;
@@ -22,6 +24,9 @@ public final class ImageClassifierHelper {
     public static final int MODEL_EFFICIENTNETV2 = 3;
     @org.jetbrains.annotations.NotNull()
     private static final java.lang.String TAG = "ImageClassifierHelper";
+    @kotlin.jvm.Volatile()
+    @org.jetbrains.annotations.Nullable()
+    private static volatile com.elink.aigallery.ImageClassifierHelper INSTANCE;
     @org.jetbrains.annotations.NotNull()
     public static final com.elink.aigallery.ImageClassifierHelper.Companion Companion = null;
     
@@ -86,6 +91,16 @@ public final class ImageClassifierHelper {
     android.graphics.Bitmap image, int rotation) {
     }
     
+    @org.jetbrains.annotations.NotNull()
+    public final java.util.List<java.lang.String> classifyLabels(@org.jetbrains.annotations.NotNull()
+    android.graphics.Bitmap image) {
+        return null;
+    }
+    
+    private final android.graphics.Bitmap ensureArgbBitmap(android.graphics.Bitmap bitmap) {
+        return null;
+    }
+    
     private final org.tensorflow.lite.task.core.vision.ImageProcessingOptions.Orientation getOrientationFromRotation(int rotation) {
         return null;
     }
@@ -100,11 +115,17 @@ public final class ImageClassifierHelper {
         java.util.List<? extends org.tensorflow.lite.task.vision.classifier.Classifications> results, long inferenceTime);
     }
     
-    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000\u001a\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0007\n\u0002\u0010\u000e\n\u0000\b\u0086\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002R\u000e\u0010\u0003\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0007\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\b\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\fX\u0082T\u00a2\u0006\u0002\n\u0000\u00a8\u0006\r"}, d2 = {"Lcom/elink/aigallery/ImageClassifierHelper$Companion;", "", "()V", "DELEGATE_CPU", "", "DELEGATE_GPU", "DELEGATE_NNAPI", "MODEL_EFFICIENTNETV0", "MODEL_EFFICIENTNETV1", "MODEL_EFFICIENTNETV2", "MODEL_MOBILENETV1", "TAG", "", "app_release"})
+    @kotlin.Metadata(mv = {1, 9, 0}, k = 1, xi = 48, d1 = {"\u0000*\n\u0002\u0018\u0002\n\u0002\u0010\u0000\n\u0002\b\u0002\n\u0002\u0010\b\n\u0002\b\u0003\n\u0002\u0018\u0002\n\u0002\b\u0005\n\u0002\u0010\u000e\n\u0002\b\u0002\n\u0002\u0018\u0002\n\u0000\b\u0086\u0003\u0018\u00002\u00020\u0001B\u0007\b\u0002\u00a2\u0006\u0002\u0010\u0002J\u000e\u0010\u000f\u001a\u00020\b2\u0006\u0010\u0010\u001a\u00020\u0011R\u000e\u0010\u0003\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0005\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u0006\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u0010\u0010\u0007\u001a\u0004\u0018\u00010\bX\u0082\u000e\u00a2\u0006\u0002\n\u0000R\u000e\u0010\t\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\n\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\u000b\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\f\u001a\u00020\u0004X\u0086T\u00a2\u0006\u0002\n\u0000R\u000e\u0010\r\u001a\u00020\u000eX\u0082T\u00a2\u0006\u0002\n\u0000\u00a8\u0006\u0012"}, d2 = {"Lcom/elink/aigallery/ImageClassifierHelper$Companion;", "", "()V", "DELEGATE_CPU", "", "DELEGATE_GPU", "DELEGATE_NNAPI", "INSTANCE", "Lcom/elink/aigallery/ImageClassifierHelper;", "MODEL_EFFICIENTNETV0", "MODEL_EFFICIENTNETV1", "MODEL_EFFICIENTNETV2", "MODEL_MOBILENETV1", "TAG", "", "getSharedInstance", "context", "Landroid/content/Context;", "app_release"})
     public static final class Companion {
         
         private Companion() {
             super();
+        }
+        
+        @org.jetbrains.annotations.NotNull()
+        public final com.elink.aigallery.ImageClassifierHelper getSharedInstance(@org.jetbrains.annotations.NotNull()
+        android.content.Context context) {
+            return null;
         }
     }
 }

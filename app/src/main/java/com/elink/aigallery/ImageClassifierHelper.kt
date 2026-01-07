@@ -18,8 +18,9 @@ package com.elink.aigallery
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.os.SystemClock
-import android.util.Log
+import com.elink.aigallery.utils.MyLog
 import android.view.Surface
 import org.tensorflow.lite.gpu.CompatibilityList
 import org.tensorflow.lite.support.image.ImageProcessor
@@ -91,7 +92,7 @@ class ImageClassifierHelper(
             imageClassifierListener?.onError(
                 "Image classifier failed to initialize. See error logs for details"
             )
-            Log.e(TAG, "TFLite failed to load model with error: " + e.message)
+            MyLog.e(TAG, "TFLite failed to load model with error: ${e.message}", e)
         }
     }
 
@@ -131,16 +132,30 @@ class ImageClassifierHelper(
             if (imageClassifier == null) {
                 setupImageClassifier()
             }
+            val inputBitmap = ensureArgbBitmap(image)
             val imageProcessor = ImageProcessor.Builder().build()
-            val tensorImage = imageProcessor.process(TensorImage.fromBitmap(image))
+            val tensorImage = imageProcessor.process(TensorImage.fromBitmap(inputBitmap))
             val results = imageClassifier?.classify(tensorImage).orEmpty()
-            return results
+            val labels = results
                 .flatMap { it.categories }
                 .sortedByDescending { it.score }
                 .map { it.label }
                 .distinct()
                 .take(maxResults)
+            if (inputBitmap !== image) {
+                inputBitmap.recycle()
+            }
+            return labels
         }
+    }
+
+    private fun ensureArgbBitmap(bitmap: Bitmap): Bitmap {
+        if (bitmap.config == Bitmap.Config.ARGB_8888) return bitmap
+        val converted =
+            Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(converted)
+        canvas.drawBitmap(bitmap, 0f, 0f, null)
+        return converted
     }
 
     // Receive the device rotation (Surface.x values range from 0->3) and return EXIF orientation

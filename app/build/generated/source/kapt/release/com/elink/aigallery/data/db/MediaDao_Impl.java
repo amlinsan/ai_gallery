@@ -1,6 +1,7 @@
 package com.elink.aigallery.data.db;
 
 import android.database.Cursor;
+import android.os.CancellationSignal;
 import androidx.annotation.NonNull;
 import androidx.collection.ArrayMap;
 import androidx.room.CoroutinesRoom;
@@ -254,6 +255,195 @@ public final class MediaDao_Impl implements MediaDao {
           }
         } finally {
           __db.endTransaction();
+        }
+      }
+
+      @Override
+      protected void finalize() {
+        _statement.release();
+      }
+    });
+  }
+
+  @Override
+  public Object getUntaggedImages(final int limit,
+      final Continuation<? super List<MediaItem>> $completion) {
+    final String _sql = "\n"
+            + "        SELECT m.* FROM media_items AS m\n"
+            + "        LEFT JOIN image_tags AS t ON m.id = t.mediaId\n"
+            + "        WHERE t.mediaId IS NULL\n"
+            + "        ORDER BY m.dateTaken DESC\n"
+            + "        LIMIT ?\n"
+            + "        ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, limit);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<MediaItem>>() {
+      @Override
+      @NonNull
+      public List<MediaItem> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfPath = CursorUtil.getColumnIndexOrThrow(_cursor, "path");
+          final int _cursorIndexOfDateTaken = CursorUtil.getColumnIndexOrThrow(_cursor, "dateTaken");
+          final int _cursorIndexOfFolderName = CursorUtil.getColumnIndexOrThrow(_cursor, "folderName");
+          final int _cursorIndexOfWidth = CursorUtil.getColumnIndexOrThrow(_cursor, "width");
+          final int _cursorIndexOfHeight = CursorUtil.getColumnIndexOrThrow(_cursor, "height");
+          final List<MediaItem> _result = new ArrayList<MediaItem>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final MediaItem _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpPath;
+            if (_cursor.isNull(_cursorIndexOfPath)) {
+              _tmpPath = null;
+            } else {
+              _tmpPath = _cursor.getString(_cursorIndexOfPath);
+            }
+            final long _tmpDateTaken;
+            _tmpDateTaken = _cursor.getLong(_cursorIndexOfDateTaken);
+            final String _tmpFolderName;
+            if (_cursor.isNull(_cursorIndexOfFolderName)) {
+              _tmpFolderName = null;
+            } else {
+              _tmpFolderName = _cursor.getString(_cursorIndexOfFolderName);
+            }
+            final int _tmpWidth;
+            _tmpWidth = _cursor.getInt(_cursorIndexOfWidth);
+            final int _tmpHeight;
+            _tmpHeight = _cursor.getInt(_cursorIndexOfHeight);
+            _item = new MediaItem(_tmpId,_tmpPath,_tmpDateTaken,_tmpFolderName,_tmpWidth,_tmpHeight);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Object getImagesWithoutFaceAnalysis(final int limit,
+      final Continuation<? super List<MediaItem>> $completion) {
+    final String _sql = "\n"
+            + "        SELECT m.* FROM media_items AS m\n"
+            + "        LEFT JOIN media_face_analysis AS f ON m.id = f.mediaId\n"
+            + "        WHERE f.mediaId IS NULL\n"
+            + "        ORDER BY m.dateTaken DESC\n"
+            + "        LIMIT ?\n"
+            + "        ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    _statement.bindLong(_argIndex, limit);
+    final CancellationSignal _cancellationSignal = DBUtil.createCancellationSignal();
+    return CoroutinesRoom.execute(__db, false, _cancellationSignal, new Callable<List<MediaItem>>() {
+      @Override
+      @NonNull
+      public List<MediaItem> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfPath = CursorUtil.getColumnIndexOrThrow(_cursor, "path");
+          final int _cursorIndexOfDateTaken = CursorUtil.getColumnIndexOrThrow(_cursor, "dateTaken");
+          final int _cursorIndexOfFolderName = CursorUtil.getColumnIndexOrThrow(_cursor, "folderName");
+          final int _cursorIndexOfWidth = CursorUtil.getColumnIndexOrThrow(_cursor, "width");
+          final int _cursorIndexOfHeight = CursorUtil.getColumnIndexOrThrow(_cursor, "height");
+          final List<MediaItem> _result = new ArrayList<MediaItem>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final MediaItem _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpPath;
+            if (_cursor.isNull(_cursorIndexOfPath)) {
+              _tmpPath = null;
+            } else {
+              _tmpPath = _cursor.getString(_cursorIndexOfPath);
+            }
+            final long _tmpDateTaken;
+            _tmpDateTaken = _cursor.getLong(_cursorIndexOfDateTaken);
+            final String _tmpFolderName;
+            if (_cursor.isNull(_cursorIndexOfFolderName)) {
+              _tmpFolderName = null;
+            } else {
+              _tmpFolderName = _cursor.getString(_cursorIndexOfFolderName);
+            }
+            final int _tmpWidth;
+            _tmpWidth = _cursor.getInt(_cursorIndexOfWidth);
+            final int _tmpHeight;
+            _tmpHeight = _cursor.getInt(_cursorIndexOfHeight);
+            _item = new MediaItem(_tmpId,_tmpPath,_tmpDateTaken,_tmpFolderName,_tmpWidth,_tmpHeight);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
+          _statement.release();
+        }
+      }
+    }, $completion);
+  }
+
+  @Override
+  public Flow<List<MediaItem>> getImagesByLabel(final String label) {
+    final String _sql = "\n"
+            + "        SELECT DISTINCT m.* FROM media_items AS m\n"
+            + "        INNER JOIN image_tags AS t ON m.id = t.mediaId\n"
+            + "        WHERE t.label = ?\n"
+            + "        ORDER BY m.dateTaken DESC\n"
+            + "        ";
+    final RoomSQLiteQuery _statement = RoomSQLiteQuery.acquire(_sql, 1);
+    int _argIndex = 1;
+    if (label == null) {
+      _statement.bindNull(_argIndex);
+    } else {
+      _statement.bindString(_argIndex, label);
+    }
+    return CoroutinesRoom.createFlow(__db, false, new String[] {"media_items",
+        "image_tags"}, new Callable<List<MediaItem>>() {
+      @Override
+      @NonNull
+      public List<MediaItem> call() throws Exception {
+        final Cursor _cursor = DBUtil.query(__db, _statement, false, null);
+        try {
+          final int _cursorIndexOfId = CursorUtil.getColumnIndexOrThrow(_cursor, "id");
+          final int _cursorIndexOfPath = CursorUtil.getColumnIndexOrThrow(_cursor, "path");
+          final int _cursorIndexOfDateTaken = CursorUtil.getColumnIndexOrThrow(_cursor, "dateTaken");
+          final int _cursorIndexOfFolderName = CursorUtil.getColumnIndexOrThrow(_cursor, "folderName");
+          final int _cursorIndexOfWidth = CursorUtil.getColumnIndexOrThrow(_cursor, "width");
+          final int _cursorIndexOfHeight = CursorUtil.getColumnIndexOrThrow(_cursor, "height");
+          final List<MediaItem> _result = new ArrayList<MediaItem>(_cursor.getCount());
+          while (_cursor.moveToNext()) {
+            final MediaItem _item;
+            final long _tmpId;
+            _tmpId = _cursor.getLong(_cursorIndexOfId);
+            final String _tmpPath;
+            if (_cursor.isNull(_cursorIndexOfPath)) {
+              _tmpPath = null;
+            } else {
+              _tmpPath = _cursor.getString(_cursorIndexOfPath);
+            }
+            final long _tmpDateTaken;
+            _tmpDateTaken = _cursor.getLong(_cursorIndexOfDateTaken);
+            final String _tmpFolderName;
+            if (_cursor.isNull(_cursorIndexOfFolderName)) {
+              _tmpFolderName = null;
+            } else {
+              _tmpFolderName = _cursor.getString(_cursorIndexOfFolderName);
+            }
+            final int _tmpWidth;
+            _tmpWidth = _cursor.getInt(_cursorIndexOfWidth);
+            final int _tmpHeight;
+            _tmpHeight = _cursor.getInt(_cursorIndexOfHeight);
+            _item = new MediaItem(_tmpId,_tmpPath,_tmpDateTaken,_tmpFolderName,_tmpWidth,_tmpHeight);
+            _result.add(_item);
+          }
+          return _result;
+        } finally {
+          _cursor.close();
         }
       }
 

@@ -27,10 +27,12 @@ import java.util.Set;
 public final class AppDatabase_Impl extends AppDatabase {
   private volatile MediaDao _mediaDao;
 
+  private volatile PersonDao _personDao;
+
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `media_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `path` TEXT NOT NULL, `dateTaken` INTEGER NOT NULL, `folderName` TEXT NOT NULL, `width` INTEGER NOT NULL, `height` INTEGER NOT NULL)");
@@ -39,14 +41,24 @@ public final class AppDatabase_Impl extends AppDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `image_tags` (`mediaId` INTEGER NOT NULL, `label` TEXT NOT NULL, `confidence` REAL NOT NULL, PRIMARY KEY(`mediaId`, `label`), FOREIGN KEY(`mediaId`) REFERENCES `media_items`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_image_tags_mediaId` ON `image_tags` (`mediaId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_image_tags_label` ON `image_tags` (`label`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `persons` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `embedding` BLOB NOT NULL, `embeddingDim` INTEGER NOT NULL, `sampleCount` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_persons_name` ON `persons` (`name`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `face_embeddings` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `mediaId` INTEGER NOT NULL, `personId` INTEGER, `embedding` BLOB NOT NULL, `embeddingDim` INTEGER NOT NULL, `leftPos` INTEGER NOT NULL, `topPos` INTEGER NOT NULL, `rightPos` INTEGER NOT NULL, `bottomPos` INTEGER NOT NULL, `createdAt` INTEGER NOT NULL, FOREIGN KEY(`mediaId`) REFERENCES `media_items`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`personId`) REFERENCES `persons`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_face_embeddings_mediaId` ON `face_embeddings` (`mediaId`)");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_face_embeddings_personId` ON `face_embeddings` (`personId`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `media_face_analysis` (`mediaId` INTEGER NOT NULL, `hasFace` INTEGER NOT NULL, `processedAt` INTEGER NOT NULL, PRIMARY KEY(`mediaId`), FOREIGN KEY(`mediaId`) REFERENCES `media_items`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
+        db.execSQL("CREATE INDEX IF NOT EXISTS `index_media_face_analysis_mediaId` ON `media_face_analysis` (`mediaId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c621b36ea4db82107d2f5328242b4840')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7cdf853b9b47e6131403683779d65b8a')");
       }
 
       @Override
       public void dropAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS `media_items`");
         db.execSQL("DROP TABLE IF EXISTS `image_tags`");
+        db.execSQL("DROP TABLE IF EXISTS `persons`");
+        db.execSQL("DROP TABLE IF EXISTS `face_embeddings`");
+        db.execSQL("DROP TABLE IF EXISTS `media_face_analysis`");
         final List<? extends RoomDatabase.Callback> _callbacks = mCallbacks;
         if (_callbacks != null) {
           for (RoomDatabase.Callback _callback : _callbacks) {
@@ -125,9 +137,65 @@ public final class AppDatabase_Impl extends AppDatabase {
                   + " Expected:\n" + _infoImageTags + "\n"
                   + " Found:\n" + _existingImageTags);
         }
+        final HashMap<String, TableInfo.Column> _columnsPersons = new HashMap<String, TableInfo.Column>(6);
+        _columnsPersons.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPersons.put("name", new TableInfo.Column("name", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPersons.put("embedding", new TableInfo.Column("embedding", "BLOB", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPersons.put("embeddingDim", new TableInfo.Column("embeddingDim", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPersons.put("sampleCount", new TableInfo.Column("sampleCount", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsPersons.put("createdAt", new TableInfo.Column("createdAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysPersons = new HashSet<TableInfo.ForeignKey>(0);
+        final HashSet<TableInfo.Index> _indicesPersons = new HashSet<TableInfo.Index>(1);
+        _indicesPersons.add(new TableInfo.Index("index_persons_name", false, Arrays.asList("name"), Arrays.asList("ASC")));
+        final TableInfo _infoPersons = new TableInfo("persons", _columnsPersons, _foreignKeysPersons, _indicesPersons);
+        final TableInfo _existingPersons = TableInfo.read(db, "persons");
+        if (!_infoPersons.equals(_existingPersons)) {
+          return new RoomOpenHelper.ValidationResult(false, "persons(com.elink.aigallery.data.db.PersonEntity).\n"
+                  + " Expected:\n" + _infoPersons + "\n"
+                  + " Found:\n" + _existingPersons);
+        }
+        final HashMap<String, TableInfo.Column> _columnsFaceEmbeddings = new HashMap<String, TableInfo.Column>(10);
+        _columnsFaceEmbeddings.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("mediaId", new TableInfo.Column("mediaId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("personId", new TableInfo.Column("personId", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("embedding", new TableInfo.Column("embedding", "BLOB", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("embeddingDim", new TableInfo.Column("embeddingDim", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("leftPos", new TableInfo.Column("leftPos", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("topPos", new TableInfo.Column("topPos", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("rightPos", new TableInfo.Column("rightPos", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("bottomPos", new TableInfo.Column("bottomPos", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsFaceEmbeddings.put("createdAt", new TableInfo.Column("createdAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysFaceEmbeddings = new HashSet<TableInfo.ForeignKey>(2);
+        _foreignKeysFaceEmbeddings.add(new TableInfo.ForeignKey("media_items", "CASCADE", "NO ACTION", Arrays.asList("mediaId"), Arrays.asList("id")));
+        _foreignKeysFaceEmbeddings.add(new TableInfo.ForeignKey("persons", "SET NULL", "NO ACTION", Arrays.asList("personId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesFaceEmbeddings = new HashSet<TableInfo.Index>(2);
+        _indicesFaceEmbeddings.add(new TableInfo.Index("index_face_embeddings_mediaId", false, Arrays.asList("mediaId"), Arrays.asList("ASC")));
+        _indicesFaceEmbeddings.add(new TableInfo.Index("index_face_embeddings_personId", false, Arrays.asList("personId"), Arrays.asList("ASC")));
+        final TableInfo _infoFaceEmbeddings = new TableInfo("face_embeddings", _columnsFaceEmbeddings, _foreignKeysFaceEmbeddings, _indicesFaceEmbeddings);
+        final TableInfo _existingFaceEmbeddings = TableInfo.read(db, "face_embeddings");
+        if (!_infoFaceEmbeddings.equals(_existingFaceEmbeddings)) {
+          return new RoomOpenHelper.ValidationResult(false, "face_embeddings(com.elink.aigallery.data.db.FaceEmbedding).\n"
+                  + " Expected:\n" + _infoFaceEmbeddings + "\n"
+                  + " Found:\n" + _existingFaceEmbeddings);
+        }
+        final HashMap<String, TableInfo.Column> _columnsMediaFaceAnalysis = new HashMap<String, TableInfo.Column>(3);
+        _columnsMediaFaceAnalysis.put("mediaId", new TableInfo.Column("mediaId", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMediaFaceAnalysis.put("hasFace", new TableInfo.Column("hasFace", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsMediaFaceAnalysis.put("processedAt", new TableInfo.Column("processedAt", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        final HashSet<TableInfo.ForeignKey> _foreignKeysMediaFaceAnalysis = new HashSet<TableInfo.ForeignKey>(1);
+        _foreignKeysMediaFaceAnalysis.add(new TableInfo.ForeignKey("media_items", "CASCADE", "NO ACTION", Arrays.asList("mediaId"), Arrays.asList("id")));
+        final HashSet<TableInfo.Index> _indicesMediaFaceAnalysis = new HashSet<TableInfo.Index>(1);
+        _indicesMediaFaceAnalysis.add(new TableInfo.Index("index_media_face_analysis_mediaId", false, Arrays.asList("mediaId"), Arrays.asList("ASC")));
+        final TableInfo _infoMediaFaceAnalysis = new TableInfo("media_face_analysis", _columnsMediaFaceAnalysis, _foreignKeysMediaFaceAnalysis, _indicesMediaFaceAnalysis);
+        final TableInfo _existingMediaFaceAnalysis = TableInfo.read(db, "media_face_analysis");
+        if (!_infoMediaFaceAnalysis.equals(_existingMediaFaceAnalysis)) {
+          return new RoomOpenHelper.ValidationResult(false, "media_face_analysis(com.elink.aigallery.data.db.MediaFaceAnalysis).\n"
+                  + " Expected:\n" + _infoMediaFaceAnalysis + "\n"
+                  + " Found:\n" + _existingMediaFaceAnalysis);
+        }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "c621b36ea4db82107d2f5328242b4840", "8a19f33afc904e39a457734405d29050");
+    }, "7cdf853b9b47e6131403683779d65b8a", "6363c5e8b29ba32b8317e1dc09b3e0f7");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -138,7 +206,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "media_items","image_tags");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "media_items","image_tags","persons","face_embeddings","media_face_analysis");
   }
 
   @Override
@@ -156,6 +224,9 @@ public final class AppDatabase_Impl extends AppDatabase {
       }
       _db.execSQL("DELETE FROM `media_items`");
       _db.execSQL("DELETE FROM `image_tags`");
+      _db.execSQL("DELETE FROM `persons`");
+      _db.execSQL("DELETE FROM `face_embeddings`");
+      _db.execSQL("DELETE FROM `media_face_analysis`");
       super.setTransactionSuccessful();
     } finally {
       super.endTransaction();
@@ -174,6 +245,7 @@ public final class AppDatabase_Impl extends AppDatabase {
   protected Map<Class<?>, List<Class<?>>> getRequiredTypeConverters() {
     final HashMap<Class<?>, List<Class<?>>> _typeConvertersMap = new HashMap<Class<?>, List<Class<?>>>();
     _typeConvertersMap.put(MediaDao.class, MediaDao_Impl.getRequiredConverters());
+    _typeConvertersMap.put(PersonDao.class, PersonDao_Impl.getRequiredConverters());
     return _typeConvertersMap;
   }
 
@@ -202,6 +274,20 @@ public final class AppDatabase_Impl extends AppDatabase {
           _mediaDao = new MediaDao_Impl(this);
         }
         return _mediaDao;
+      }
+    }
+  }
+
+  @Override
+  public PersonDao personDao() {
+    if (_personDao != null) {
+      return _personDao;
+    } else {
+      synchronized(this) {
+        if(_personDao == null) {
+          _personDao = new PersonDao_Impl(this);
+        }
+        return _personDao;
       }
     }
   }

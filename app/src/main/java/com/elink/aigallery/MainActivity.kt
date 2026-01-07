@@ -20,6 +20,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.elink.aigallery.databinding.ActivityMainBinding
+import com.elink.aigallery.worker.TaggingWorkScheduler
 
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
@@ -28,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+        TaggingWorkScheduler.schedule(applicationContext)
     }
 
     override fun onBackPressed() {

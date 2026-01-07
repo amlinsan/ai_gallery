@@ -63,6 +63,14 @@ class MediaRepository(context: Context) {
         }
     }
 
+    fun searchImages(query: String): Flow<List<MediaItem>> {
+        return mediaDao.searchImages(query)
+    }
+
+    fun observeImagesByLabel(label: String): Flow<List<MediaItem>> {
+        return mediaDao.getImagesByLabel(label)
+    }
+
     suspend fun getUntaggedImages(limit: Int): List<MediaItem> {
         return mediaDao.getUntaggedImages(limit)
     }

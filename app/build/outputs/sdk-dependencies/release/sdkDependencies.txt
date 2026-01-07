@@ -1085,10 +1085,10 @@ library {
   maven_library {
     groupId: "org.tensorflow"
     artifactId: "tensorflow-lite-api"
-    version: "2.8.0"
+    version: "2.9.0"
   }
   digests {
-    sha256: "6A\375\302`\031\342\334%\n\224\335{&\203\033<\3556\034\252!\316\375\037P\351\212\246L\223\243"
+    sha256: "\223\372NDi\242>\344V\254\206|\366\256\335\222\016z\r\255\277\247F\304\322D\255\262\033\347//"
   }
   repo_index {
     value: 1
@@ -1276,6 +1276,212 @@ library {
     sha256: "\213\205\363\212\250&\331\002\350\250\215*\371\334s\245\364?f\030r\004\205\361nt&\222\305\241\217o"
   }
   repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.mlkit"
+    artifactId: "face-detection"
+    version: "16.1.5"
+  }
+  digests {
+    sha256: "\005\267g?-\362\000\030\267A\347\226\200\001L\204N\306\tW\200\221|\035OyD\311p\341PM"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.datatransport"
+    artifactId: "transport-api"
+    version: "2.2.1"
+  }
+  digests {
+    sha256: "\346/s\272\034\177]\025\365\330m\216\232)\214B\314\320d\216|\346\v\2361/.\315\022;^\320"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.datatransport"
+    artifactId: "transport-backend-cct"
+    version: "2.3.3"
+  }
+  digests {
+    sha256: "\262*\024\325`\245\220\334\207^\220$$\262\232\023\240-\037\257){|9\251\000yg\377\255\314\275"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.datatransport"
+    artifactId: "transport-runtime"
+    version: "2.2.6"
+  }
+  digests {
+    sha256: "\330:\322<\023D)i\021a\311$v\243\310=\3626\315\037\213\255\277\324\360\a#\264\354\315t\034"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "javax.inject"
+    artifactId: "javax.inject"
+    version: "1"
+  }
+  digests {
+    sha256: "\221\307pD\245\fH\0266\303-\221o\330\234\221\030\247!\2259\004R\310\020e\b\017\225}\347\377"
+  }
+  repo_index {
+    value: 1
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.firebase"
+    artifactId: "firebase-encoders"
+    version: "16.1.0"
+  }
+  digests {
+    sha256: "\217\211\247B\230\273\314\302\305C8R\b\242\360\306\177`<\346~n\302\034\307r\351\216h\217|\365"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.firebase"
+    artifactId: "firebase-encoders-json"
+    version: "17.1.0"
+  }
+  digests {
+    sha256: "\202\225\307U\274\255\310z*\256\345\271\345h\362\177\3218\375E\377\021Y\250\356t|\364\303\243\215\205"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.gms"
+    artifactId: "play-services-base"
+    version: "18.0.1"
+  }
+  digests {
+    sha256: "(\226\327oC+\345!g)[\271\316E\255\342\\1\n\357\374\004\322\214\370\333j\025\206\216\203\336"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.gms"
+    artifactId: "play-services-basement"
+    version: "18.0.0"
+  }
+  digests {
+    sha256: "U\301wtg\220\032-9\2372R8LIv(J\243_\335\375Y\225Fm\276\254\264\237\235\326"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.gms"
+    artifactId: "play-services-tasks"
+    version: "18.0.1"
+  }
+  digests {
+    sha256: "\361\006\333H\306\314\372\216\023\025\247\255\304J\354\320/\3675^\263\372}\315\313\250\302\203\250\353\026\201"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.android.gms"
+    artifactId: "play-services-mlkit-face-detection"
+    version: "17.0.1"
+  }
+  digests {
+    sha256: "\252\r}GnA\005\002w!{\003\306{QlQ\377`,\005)E\025\367\335\240:c6\036}"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.firebase"
+    artifactId: "firebase-components"
+    version: "16.1.0"
+  }
+  digests {
+    sha256: "\202\351\032\245\355\030n\355\257\037\"\020\365\322A\272nDV\317\f2\224\235\\\333\341R\260\342\350\213"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.firebase"
+    artifactId: "firebase-annotations"
+    version: "16.0.0"
+  }
+  digests {
+    sha256: "\2100\362\350\245\3444\313\305\344\275\030\0230s\266\350Q\212\214\350\354,\346\363\262s\311\035\226d\302"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.mlkit"
+    artifactId: "common"
+    version: "18.1.0"
+  }
+  digests {
+    sha256: "=\016x\033cri\037J\242_\223\255n\374\360\004\261/\0025o\360m:\231\35494\3718\263"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.mlkit"
+    artifactId: "vision-common"
+    version: "17.1.0"
+  }
+  digests {
+    sha256: "D\016\035\b\372\253~\0237\257\203Rj\336\241\366\f\2167p\341s\017\243\336\243\2270b\371\257)"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "com.google.mlkit"
+    artifactId: "vision-interfaces"
+    version: "16.0.0"
+  }
+  digests {
+    sha256: "\v\245\216\001\363l\351\211\364\375$\233H\v\347c\250}U9\021\367\2478Ij\241\202t\265\311}"
+  }
+  repo_index {
+  }
+}
+library {
+  maven_library {
+    groupId: "org.tensorflow"
+    artifactId: "tensorflow-lite"
+    version: "2.9.0"
+  }
+  digests {
+    sha256: "\021\225\235A$\021\363LR\241{\304\203\006\033\025\374\211\331^R\344\022\260\222\001!\272E\317\354\325"
+  }
+  repo_index {
+    value: 1
   }
 }
 library_dependencies {
@@ -2123,6 +2329,123 @@ library_dependencies {
   library_dep_index: 20
   library_dep_index: 104
 }
+library_dependencies {
+  library_index: 106
+  library_dep_index: 107
+  library_dep_index: 108
+  library_dep_index: 109
+  library_dep_index: 113
+  library_dep_index: 114
+  library_dep_index: 116
+  library_dep_index: 115
+  library_dep_index: 117
+  library_dep_index: 111
+  library_dep_index: 112
+  library_dep_index: 119
+}
+library_dependencies {
+  library_index: 107
+  library_dep_index: 1
+}
+library_dependencies {
+  library_index: 108
+  library_dep_index: 1
+  library_dep_index: 107
+  library_dep_index: 109
+  library_dep_index: 111
+  library_dep_index: 112
+}
+library_dependencies {
+  library_index: 109
+  library_dep_index: 1
+  library_dep_index: 107
+  library_dep_index: 110
+}
+library_dependencies {
+  library_index: 111
+  library_dep_index: 1
+}
+library_dependencies {
+  library_index: 112
+  library_dep_index: 1
+  library_dep_index: 111
+}
+library_dependencies {
+  library_index: 113
+  library_dep_index: 10
+  library_dep_index: 8
+  library_dep_index: 51
+  library_dep_index: 114
+  library_dep_index: 115
+}
+library_dependencies {
+  library_index: 114
+  library_dep_index: 10
+  library_dep_index: 8
+  library_dep_index: 51
+}
+library_dependencies {
+  library_index: 115
+  library_dep_index: 114
+}
+library_dependencies {
+  library_index: 116
+  library_dep_index: 107
+  library_dep_index: 108
+  library_dep_index: 109
+  library_dep_index: 113
+  library_dep_index: 114
+  library_dep_index: 115
+  library_dep_index: 91
+  library_dep_index: 117
+  library_dep_index: 111
+  library_dep_index: 112
+  library_dep_index: 119
+  library_dep_index: 120
+  library_dep_index: 121
+}
+library_dependencies {
+  library_index: 117
+  library_dep_index: 1
+  library_dep_index: 118
+}
+library_dependencies {
+  library_index: 119
+  library_dep_index: 8
+  library_dep_index: 107
+  library_dep_index: 108
+  library_dep_index: 109
+  library_dep_index: 113
+  library_dep_index: 114
+  library_dep_index: 115
+  library_dep_index: 117
+  library_dep_index: 111
+  library_dep_index: 112
+}
+library_dependencies {
+  library_index: 120
+  library_dep_index: 81
+  library_dep_index: 107
+  library_dep_index: 108
+  library_dep_index: 109
+  library_dep_index: 113
+  library_dep_index: 114
+  library_dep_index: 115
+  library_dep_index: 91
+  library_dep_index: 117
+  library_dep_index: 111
+  library_dep_index: 112
+  library_dep_index: 119
+}
+library_dependencies {
+  library_index: 121
+  library_dep_index: 114
+  library_dep_index: 115
+}
+library_dependencies {
+  library_index: 122
+  library_dep_index: 90
+}
 module_dependencies {
   module_name: "base"
   dependency_index: 0
@@ -2147,6 +2470,8 @@ module_dependencies {
   dependency_index: 99
   dependency_index: 20
   dependency_index: 104
+  dependency_index: 106
+  dependency_index: 122
   dependency_index: 30
   dependency_index: 27
   dependency_index: 66

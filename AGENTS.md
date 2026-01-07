@@ -43,8 +43,17 @@
 ### 错误处理 (Error Handling)
 - 所有的 I/O 操作（数据库、文件读取、AI 推理）必须在 `Dispatchers.IO` 中执行。
 - 捕获异常时，不仅要打印 Log，还需考虑 UI 层的提示（如 Toast 或 Snackbar）。
+- **日志规范**：统一使用 `utils/MyLog`，基础 Tag 固定为 `elink_aig`；各类可定义 `TAG` 作为业务关键字，最终日志格式为 `[TAG] message`。
 
 ## 4. 禁止事项 (Negative Constraints)
 - **禁止** 在主线程 (Main Thread) 进行数据库访问或图片解码。
 - **禁止** 删除项目中已有的 `MediaItem` 和 `ImageTag` 实体定义。
 - **禁止** 引入网络请求库 (Retrofit/OkHttp)，除非明确要求（本项目为离线应用）。
+
+## 5. 当前基线锁定 (Baseline Lock)
+以下内容为当前阶段已确认的框架基线，后续所有调试与迭代必须以此为准，未经允许不得更改或回退：
+- **架构与技术栈**：Kotlin + MVVM + Room + Flow/Coroutines + WorkManager + Coil + XML/ViewBinding。
+- **导航结构**：Single Activity + Fragments + Navigation Component。
+- **SDK 版本**：`minSdk=24`，`targetSdk=35`，`compileSdk=35`。
+- **数据链路**：MediaStore 扫描 -> Room 入库 -> ViewModel 观察 -> UI 展示。
+- **AI 后台化**：使用 WorkManager 后台批处理，端侧推理，禁止云端调用。
