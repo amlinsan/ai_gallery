@@ -19,6 +19,9 @@
                 app:argType="integer"
                 android:defaultValue="0" />
         </action>
+        <action
+            android:id="@+id/action_gallery_to_person_grid"
+            app:destination="@id/person_grid_fragment" />
     </fragment>
 
     <fragment
@@ -33,6 +36,15 @@
                 app:argType="integer"
                 android:defaultValue="0" />
         </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/person_grid_fragment"
+        android:name="com.elink.aigallery.fragments.PersonGridFragment"
+        android:label="PersonGridFragment">
+        <action
+            android:id="@+id/action_person_grid_to_grid"
+            app:destination="@id/media_grid_fragment" />
     </fragment>
 
     <fragment

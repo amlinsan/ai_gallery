@@ -16,6 +16,7 @@ import com.elink.aigallery.databinding.FragmentTabContentBinding
 import com.elink.aigallery.ui.gallery.CategoryAdapter
 import com.elink.aigallery.ui.gallery.FolderAdapter
 import com.elink.aigallery.ui.gallery.GalleryViewModel
+import com.elink.aigallery.data.model.CategoryType
 import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.launch
 
@@ -73,8 +74,12 @@ class GalleryTabFragment : Fragment() {
         } else {
             val adapter = CategoryAdapter(
                 onClick = { category ->
-                    viewModel.selectCategory(category)
-                    findNavController().navigate(R.id.action_gallery_to_grid)
+                    if (category.type == CategoryType.PEOPLE) {
+                        findNavController().navigate(R.id.action_gallery_to_person_grid)
+                    } else {
+                        viewModel.selectCategory(category)
+                        findNavController().navigate(R.id.action_gallery_to_grid)
+                    }
                 },
                 onLongClick = { category ->
                     showDeleteConfirmDialog(

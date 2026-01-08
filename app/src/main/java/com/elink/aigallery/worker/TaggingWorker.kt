@@ -30,6 +30,8 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.min
 import kotlin.coroutines.resume
 
 class TaggingWorker(
@@ -163,14 +165,14 @@ class TaggingWorker(
                         "Faces detected mediaId=${item.id} path=${item.path} count=${faces.size} size=${bitmap.width}x${bitmap.height}"
                     )
                     logFaceDetails(item.id, faces, bitmap.width, bitmap.height)
-                    val accepted = faces.filter {
-                        faceAreaRatio(it.boundingBox, bitmap.width, bitmap.height) >= MIN_FACE_AREA_RATIO
+                    val accepted = faces.filter { face ->
+                        shouldAcceptFace(face, bitmap.width, bitmap.height)
                     }
                     val dropped = faces.size - accepted.size
                     if (dropped > 0) {
                         MyLog.i(
                             TAG,
-                            "Faces filtered by size mediaId=${item.id} path=${item.path} kept=${accepted.size} dropped=$dropped minRatio=${formatRatio(MIN_FACE_AREA_RATIO)}"
+                            "Faces filtered mediaId=${item.id} path=${item.path} kept=${accepted.size} dropped=$dropped minRatio=${formatRatio(MIN_FACE_AREA_RATIO)} minSize=${MIN_FACE_MIN_SIZE_PX}px maxYaw=${MAX_FACE_YAW} maxRoll=${MAX_FACE_ROLL}"
                         )
                     }
                     accepted
@@ -319,6 +321,18 @@ class TaggingWorker(
         return faceArea.toFloat() / imageArea.toFloat()
     }
 
+    private fun shouldAcceptFace(face: Face, imageWidth: Int, imageHeight: Int): Boolean {
+        val rect = face.boundingBox
+        val ratio = faceAreaRatio(rect, imageWidth, imageHeight)
+        if (ratio < MIN_FACE_AREA_RATIO) return false
+        val minSize = min(rect.width(), rect.height())
+        if (minSize < MIN_FACE_MIN_SIZE_PX) return false
+        val yaw = abs(face.headEulerAngleY)
+        val roll = abs(face.headEulerAngleZ)
+        if (yaw > MAX_FACE_YAW || roll > MAX_FACE_ROLL) return false
+        return true
+    }
+
     private fun formatLabelScores(scores: List<ImageClassifierHelper.LabelScore>): String {
         return scores.joinToString(separator = ", ") {
             "${it.label}=${"%.3f".format(Locale.US, it.score)}"
@@ -413,8 +427,11 @@ class TaggingWorker(
         private const val MAX_EDGE_CLASSIFY = 1024
         private const val MAX_EDGE_FACE = 800
         private const val FACE_MARGIN_RATIO = 0.2f
-        private const val MIN_FACE_AREA_RATIO = 0.01f
-        private const val PERSON_MATCH_THRESHOLD = 0.6f
+        private const val MIN_FACE_AREA_RATIO = 0.02f
+        private const val MIN_FACE_MIN_SIZE_PX = 80
+        private const val MAX_FACE_YAW = 20f
+        private const val MAX_FACE_ROLL = 20f
+        private const val PERSON_MATCH_THRESHOLD = 0.7f
         private const val DEFAULT_PERSON_NAME = "Unknown"
         private const val PERSON_TAG = "Person"
         private const val FOOD_LABEL = "Food"

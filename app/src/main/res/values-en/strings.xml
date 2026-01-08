@@ -15,4 +15,6 @@
     <string name="category_people">People</string>
     <string name="category_food">Food</string>
     <string name="category_nature">Nature</string>
+    <string name="person_empty_hint">No people detected</string>
+    <string name="person_fallback_name">Person %1$d</string>
 </resources>

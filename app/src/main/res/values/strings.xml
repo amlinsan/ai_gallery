@@ -29,6 +29,8 @@
     <string name="category_people">人物</string>
     <string name="category_food">美食</string>
     <string name="category_nature">风景</string>
+    <string name="person_empty_hint">暂无人物识别结果</string>
+    <string name="person_fallback_name">人物 %1$d</string>
     <string name="action_delete">删除</string>
     <string name="delete_confirmation_title">确认删除</string>
     <string name="delete_folder_warning">确定要删除该文件夹下的所有图片吗？此操作无法撤销。</string>

@@ -8,7 +8,10 @@ import com.elink.aigallery.R
 import com.elink.aigallery.data.db.FolderWithImages
 import com.elink.aigallery.data.db.MediaItem
 import com.elink.aigallery.data.model.CategoryAlbum
+import com.elink.aigallery.data.model.CategoryType
+import com.elink.aigallery.data.model.PersonAlbum
 import com.elink.aigallery.data.repository.MediaRepository
+import com.elink.aigallery.data.repository.PersonRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +28,7 @@ import kotlinx.coroutines.withContext
 
 class GalleryViewModel(
     private val repository: MediaRepository,
+    private val personRepository: PersonRepository,
     private val categoryTitles: CategoryTitles
 ) : ViewModel() {
 
@@ -75,11 +79,27 @@ class GalleryViewModel(
     val categories: StateFlow<List<CategoryAlbum>> =
         combine(personFlow, foodFlow, natureFlow) { person, food, nature ->
             listOf(
-                CategoryAlbum(title = categoryTitles.people, items = person),
-                CategoryAlbum(title = categoryTitles.food, items = food),
-                CategoryAlbum(title = categoryTitles.nature, items = nature)
+                CategoryAlbum(
+                    title = categoryTitles.people,
+                    type = CategoryType.PEOPLE,
+                    items = person
+                ),
+                CategoryAlbum(
+                    title = categoryTitles.food,
+                    type = CategoryType.FOOD,
+                    items = food
+                ),
+                CategoryAlbum(
+                    title = categoryTitles.nature,
+                    type = CategoryType.NATURE,
+                    items = nature
+                )
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    val personAlbums: StateFlow<List<PersonAlbum>> =
+        personRepository.observePersonAlbums()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     private val _selectedAlbumItems = MutableStateFlow<List<MediaItem>>(emptyList())
     val selectedAlbumItems: StateFlow<List<MediaItem>> = _selectedAlbumItems
@@ -102,6 +122,16 @@ class GalleryViewModel(
     fun selectCategory(category: CategoryAlbum) {
         _selectedAlbumTitle.value = category.title
         _selectedAlbumItems.value = category.items
+    }
+
+    fun selectPerson(person: PersonAlbum) {
+        _selectedAlbumTitle.value = person.name
+        viewModelScope.launch(Dispatchers.IO) {
+            val items = personRepository.getMediaByPerson(person.personId)
+            withContext(Dispatchers.Main) {
+                _selectedAlbumItems.value = items
+            }
+        }
     }
 
     private val _deletePendingIntent = MutableStateFlow<android.app.PendingIntent?>(null)
@@ -169,6 +199,7 @@ class GalleryViewModel(
     ) : ViewModelProvider.Factory {
         private val appContext = context.applicationContext
         private val repository = MediaRepository(appContext)
+        private val personRepository = PersonRepository(appContext)
         private val categoryTitles = CategoryTitles(
             people = appContext.getString(R.string.category_people),
             food = appContext.getString(R.string.category_food),
@@ -177,7 +208,7 @@ class GalleryViewModel(
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return GalleryViewModel(repository, categoryTitles) as T
+            return GalleryViewModel(repository, personRepository, categoryTitles) as T
         }
     }
 }

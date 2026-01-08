@@ -6,12 +6,20 @@ import com.elink.aigallery.data.db.FaceEmbedding
 import com.elink.aigallery.data.db.MediaFaceAnalysis
 import com.elink.aigallery.data.db.MediaItem
 import com.elink.aigallery.data.db.PersonEntity
+import com.elink.aigallery.data.model.PersonAlbum
+import kotlinx.coroutines.flow.Flow
 
 class PersonRepository(context: Context) {
     private val mediaDao = AppDatabase.getInstance(context).mediaDao()
     private val personDao = AppDatabase.getInstance(context).personDao()
 
     suspend fun getPersons(): List<PersonEntity> = personDao.getPersons()
+
+    fun observePersonAlbums(): Flow<List<PersonAlbum>> = personDao.observePersonAlbums()
+
+    suspend fun getMediaByPerson(personId: Long): List<MediaItem> {
+        return personDao.getMediaByPerson(personId)
+    }
 
     suspend fun insertPerson(person: PersonEntity): Long = personDao.insertPerson(person)
 

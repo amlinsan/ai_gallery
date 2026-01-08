@@ -8,28 +8,30 @@
 ## 1. 布局结构 (Layout Structure)
 
 ### 1.1 主界面 (GalleryFragment)
-- **头部 (Header)**: `RelativeLayout` 左右对齐。左侧大号粗体标题（相册/Gallery），右侧 `SearchView`。
-- **标签栏 (TabLayout)**: 显示“文件夹” (Folders) 和“智能分类” (Smart Categories)。
-- **内容区 (ViewPager2)**: 承载两个标签页，支持左右滑动切换。
+- **头部 (Header)**: `RelativeLayout` 左右对齐。左侧标题 `TextView`（`GalleryPageTitleStyle`），右侧 `SearchView` 常驻。
+- **内容区 (ViewPager2)**: 承载两个标签页（`GalleryTabFragment`），左右滑动切换「文件夹 / 智能分类」。
+- **底部浮动栏 (Floating Bar)**: `LinearLayout` + 两个图标按钮（`btn_tab_gallery` / `btn_tab_smart`）切换标签页，使用 `icon_tint_selected`/`icon_tint_unselected` 反馈状态。
+- **搜索覆盖层**: 当输入搜索时，隐藏 `ViewPager2`，显示 `search_list`（3 列网格）用于展示搜索结果。
+- **空状态与加载**: `empty_state` + `request_permission_button` 统一展示权限与无数据提示；`loading` 覆盖展示加载中状态。
 
 ### 1.2 智能分类与人脸聚类 (AI Features)
-- **分类导航流**: 
-  - 点击“智能分类”中的“人物” -> 跳转至 **FaceGridFragment** (人脸目录)。
-  - 点击“美食/风景”等分类 -> 直接跳转至 **MediaGridFragment** (图片网格)。
-- **人脸目录 (FaceGridFragment)**: 
-  - 展示不同人脸的头像阵列（圆形裁剪）。
-  - 文字显示“人物 1”或识别出的名称。
+- **分类导航流**:
+  - 当前“人物/美食/风景”均直接跳转至 **MediaGridFragment**（图片网格）。
+  - 若后续新增“人物二级目录/人物相册”，需先确认导航变更，再新增对应 Fragment。
+- **人物聚类现状**:
+  - 当前仅按 `Person` 标签聚合，不做不同人物分组。
+  - 如实现人物聚类，人物卡片应展示封面脸部缩略图 + 名称/编号。
 
 ### 1.3 列表项规范 (List Items)
-- **文件夹/分类项 (`item_folder.xml`)**: 
-  - 左侧封面：尺寸 `@dimen/gallery_cover_size` (88dp)，圆角矩形。
-  - 右侧文本：主标题（24sp Bold）+ 副标题（22sp 数量）。
-- **图片项 (`item_media.xml`)**: 
+- **文件夹/分类项 (`item_folder.xml`/`item_category.xml`)**:
+  - 左侧封面：尺寸 `@dimen/gallery_cover_size` (88dp)，`centerCrop`。
+  - 右侧文本：主标题 `GalleryItemTitleStyle` + 数量 `GalleryItemCountStyle`。
+- **图片项 (`item_media.xml`)**:
   - 3 列网格布局，高度固定为 `@dimen/gallery_media_item_height` (120dp)，`centerCrop` 填充。
 
 ### 1.4 全屏浏览 (PhotoFragment)
-- **功能**: 自定义 `ZoomImageView`，支持双指缩放、拖拽和双击放大。
-- **背景**: 纯黑色 (`@color/black`)。
+- **功能**: `ViewPager2` + `ZoomImageView`，支持双指缩放/拖拽/双击。
+- **背景**: 纯黑色 (`@color/black`)，右上角悬浮删除按钮（`btn_delete`）。
 
 ## 2. 资源规范 (Resource Standards)
 
@@ -47,9 +49,10 @@
 
 ### 2.3 字体样式 (Styles)
 统一在 `styles.xml` 定义，禁止在布局中直接写 `textSize`。
-- `GalleryPageTitleStyle`: 30sp, Bold。
-- `GalleryItemTitleStyle`: 24sp, Bold。
-- `GalleryItemCountStyle`: 22sp (比标题小 2sp)。
+- `GalleryPageTitleStyle`: 28sp。
+- `GalleryItemTitleStyle`: 20sp。
+- `GalleryItemCountStyle`: 18sp。
+- `GalleryEmptyMessageStyle`: 22sp。
 
 ### 2.4 关键尺寸 (Dimens)
 - `gallery_page_padding_horizontal`: 16dp。
@@ -59,6 +62,7 @@
 ## 3. 交互体验 (User Experience)
 - **沉浸式**: Activity 设置 `setDecorFitsSystemWindows(false)`，状态栏图标随深浅模式自动切换。
 - **空状态**: 未授权或无图片时显示空状态页面，提供“授权/去拍照”按钮。
+- **搜索**: 头部 `SearchView` 始终可用；有输入时显示搜索网格结果，无结果显示搜索空提示。
 - **删除流程**:
   - **单图删除**: 在 `PhotoFragment` 提供删除入口，触发系统级确认弹窗。
   - **批量/整体删除**: 列表长按进入多选或菜单删除；删除前二次确认，智能分类删除需额外警示。
