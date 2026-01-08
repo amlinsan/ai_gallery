@@ -63,11 +63,21 @@ class GalleryFragment : Fragment() {
         // Setup ViewPager2
         val pagerAdapter = GalleryPagerAdapter(this)
         binding.viewPager.adapter = pagerAdapter
-        
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-            tab.text = if (position == 0) getString(R.string.gallery_tab_folders) 
-                       else getString(R.string.gallery_tab_categories)
-        }.attach()
+
+        // Setup Floating Bar
+        updateTabState(0) // Initial State
+        binding.btnTabGallery.setOnClickListener {
+            binding.viewPager.currentItem = 0
+        }
+        binding.btnTabSmart.setOnClickListener {
+            binding.viewPager.currentItem = 1
+        }
+
+        binding.viewPager.registerOnPageChangeCallback(object : androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                updateTabState(position)
+            }
+        })
 
         // Setup Search Adapter
         val mediaAdapter = MediaItemAdapter(
@@ -214,5 +224,18 @@ class GalleryFragment : Fragment() {
 
         binding.loading.isVisible = hasPermission && !hasLoadedOnce
         binding.requestPermissionButton.isVisible = !hasPermission
+    }
+
+    private fun updateTabState(position: Int) {
+        val selectedColor = ContextCompat.getColor(requireContext(), R.color.icon_tint_selected)
+        val unselectedColor = ContextCompat.getColor(requireContext(), R.color.icon_tint_unselected)
+
+        if (position == 0) {
+            binding.btnTabGallery.setColorFilter(selectedColor)
+            binding.btnTabSmart.setColorFilter(unselectedColor)
+        } else {
+            binding.btnTabGallery.setColorFilter(unselectedColor)
+            binding.btnTabSmart.setColorFilter(selectedColor)
+        }
     }
 }

@@ -36,4 +36,13 @@
     <dimen name="gallery_cover_size">88dp</dimen>
     <dimen name="gallery_item_content_margin">12dp</dimen>
     <dimen name="gallery_media_item_height">120dp</dimen>
+
+    <!-- Floating Action Bar -->
+    <dimen name="floating_bar_elevation">12dp</dimen>
+    <dimen name="floating_bar_padding_horizontal">32dp</dimen>
+    <dimen name="floating_bar_padding_vertical">16dp</dimen>
+    <dimen name="floating_bar_margin_bottom">32dp</dimen>
+    <dimen name="floating_bar_icon_size">28dp</dimen>
+    <dimen name="floating_bar_icon_spacing">48dp</dimen>
+    <dimen name="floating_bar_corner_radius">100dp</dimen>
 </resources>

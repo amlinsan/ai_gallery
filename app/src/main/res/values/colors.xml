@@ -27,4 +27,10 @@
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>
+
+    <!-- Floating Action Bar -->
+    <color name="bg_floating_bar">#FFFFFF</color>
+    <color name="icon_tint_floating_bar">#555555</color>
+    <color name="icon_tint_selected">#007AFF</color>
+    <color name="icon_tint_unselected">#555555</color>
 </resources>

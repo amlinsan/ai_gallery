@@ -29,4 +29,5 @@
     <string name="delete_confirmation_title">确认删除</string>
     <string name="delete_folder_warning">确定要删除该文件夹下的所有图片吗？此操作无法撤销。</string>
     <string name="delete_category_warning">确定要物理删除该分类下的所有图片吗？此操作无法撤销。</string>
+    <string name="desc_floating_bar_add">添加</string>
 </resources>
