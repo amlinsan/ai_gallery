@@ -45,4 +45,11 @@
     <dimen name="floating_bar_icon_size">28dp</dimen>
     <dimen name="floating_bar_icon_spacing">48dp</dimen>
     <dimen name="floating_bar_corner_radius">100dp</dimen>
+
+    <!-- Photo Fragment -->
+    <dimen name="btn_delete_size">48dp</dimen>
+    <dimen name="btn_delete_margin_top">48dp</dimen>
+    <dimen name="btn_delete_margin_end">24dp</dimen>
+    <dimen name="btn_delete_padding">12dp</dimen>
+    <dimen name="bg_circle_padding">8dp</dimen>
 </resources>

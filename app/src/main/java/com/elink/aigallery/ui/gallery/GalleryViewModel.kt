@@ -8,6 +8,7 @@ import com.elink.aigallery.data.db.MediaItem
 import com.elink.aigallery.data.model.CategoryAlbum
 import com.elink.aigallery.data.repository.MediaRepository
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -16,7 +17,6 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,6 +30,7 @@ class GalleryViewModel(
 
     private val searchQuery = MutableStateFlow("")
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     val searchResults: StateFlow<List<MediaItem>> =
         searchQuery
             .map { it.trim() }
@@ -83,6 +84,13 @@ class GalleryViewModel(
     private val _selectedAlbumTitle = MutableStateFlow("")
     val selectedAlbumTitle: StateFlow<String> = _selectedAlbumTitle
 
+    private val _currentPhotoList = MutableStateFlow<List<MediaItem>>(emptyList())
+    val currentPhotoList: StateFlow<List<MediaItem>> = _currentPhotoList
+
+    fun setCurrentPhotoList(items: List<MediaItem>) {
+        _currentPhotoList.value = items.toList()
+    }
+
     fun selectFolder(folder: FolderWithImages) {
         _selectedAlbumTitle.value = folder.folderName
         _selectedAlbumItems.value = folder.items
@@ -112,9 +120,6 @@ class GalleryViewModel(
         }
     }
 
-    private val _deletionEvent = kotlinx.coroutines.flow.MutableSharedFlow<Unit>()
-    val deletionEvent = _deletionEvent.asSharedFlow()
-
     fun onDeleteConfirmed() {
         val itemsToDelete = pendingDeleteItems
         if (itemsToDelete.isEmpty()) {
@@ -128,9 +133,10 @@ class GalleryViewModel(
             withContext(Dispatchers.Main) {
                 _selectedAlbumItems.value =
                     _selectedAlbumItems.value.filterNot { deleteIdSet.contains(it.id) }
+                _currentPhotoList.value =
+                    _currentPhotoList.value.filterNot { deleteIdSet.contains(it.id) }
                 pendingDeleteItems = emptyList()
                 _deletePendingIntent.value = null
-                _deletionEvent.emit(Unit)
             }
         }
     }

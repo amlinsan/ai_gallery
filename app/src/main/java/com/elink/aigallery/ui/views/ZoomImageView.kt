@@ -139,6 +139,16 @@ class ZoomImageView @JvmOverloads constructor(
         setImageMatrix(matrixCurrent)
     }
 
+    fun resetZoom() {
+        mSaveScale = 1f
+        matrixCurrent.reset()
+        imageMatrix = matrixCurrent
+        mode = NONE
+        if (viewWidth == 0 || viewHeight == 0) return
+        fitToScreen()
+        invalidate()
+    }
+
     // GestureDetector needed for Double Tap
     override fun onDown(e: MotionEvent): Boolean = false
     override fun onShowPress(e: MotionEvent) {}

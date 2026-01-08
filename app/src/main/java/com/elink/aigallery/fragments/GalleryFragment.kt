@@ -40,7 +40,7 @@ class GalleryFragment : Fragment() {
     }
 
     private val permissionLauncher =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { _ ->
             if (hasMediaPermissions()) {
                 startScan()
                 TaggingWorkScheduler.schedule(requireContext().applicationContext)
@@ -80,9 +80,15 @@ class GalleryFragment : Fragment() {
         })
 
         // Setup Search Adapter
-        val mediaAdapter = MediaItemAdapter(
+        lateinit var mediaAdapter: MediaItemAdapter
+        mediaAdapter = MediaItemAdapter(
             onClick = { item ->
-                val action = GalleryFragmentDirections.actionGalleryToPhoto(item.path)
+                val currentList = mediaAdapter.currentList
+                viewModel.setCurrentPhotoList(currentList)
+                val index = currentList.indexOfFirst { it.id == item.id }
+                val safeIndex = if (index >= 0) index else 0
+                val action = GalleryFragmentDirections.actionGalleryToPhoto()
+                    .setInitialPosition(safeIndex)
                 findNavController().navigate(action)
             },
             onLongClick = { item ->

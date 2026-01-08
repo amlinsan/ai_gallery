@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
 
-    <com.elink.aigallery.ui.views.ZoomImageView
-        android:id="@+id/photo_view"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/photo_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <ImageButton
         android:id="@+id/btn_delete"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="@dimen/btn_delete_size"
+        android:layout_height="@dimen/btn_delete_size"
         android:layout_gravity="top|end"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="16dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_marginTop="@dimen/btn_delete_margin_top"
+        android:layout_marginEnd="@dimen/btn_delete_margin_end"
+        android:padding="@dimen/btn_delete_padding"
+        android:background="@drawable/bg_circle_semitransparent"
         android:contentDescription="@string/action_delete"
         android:src="@drawable/ic_delete"
-        android:tint="@android:color/white" />
+        android:scaleType="fitCenter"
+        app:tint="@android:color/white" />
 
 </FrameLayout>

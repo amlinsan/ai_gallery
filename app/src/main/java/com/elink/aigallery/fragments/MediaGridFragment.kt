@@ -37,9 +37,15 @@ class MediaGridFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = MediaItemAdapter(
+        lateinit var adapter: MediaItemAdapter
+        adapter = MediaItemAdapter(
             onClick = { item ->
-                val action = MediaGridFragmentDirections.actionGridToPhoto(item.path)
+                val currentList = adapter.currentList
+                viewModel.setCurrentPhotoList(currentList)
+                val index = currentList.indexOfFirst { it.id == item.id }
+                val safeIndex = if (index >= 0) index else 0
+                val action = MediaGridFragmentDirections.actionGridToPhoto()
+                    .setInitialPosition(safeIndex)
                 findNavController().navigate(action)
             },
             onLongClick = { item ->

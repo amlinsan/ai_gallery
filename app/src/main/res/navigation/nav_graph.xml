@@ -13,7 +13,12 @@
             app:destination="@id/media_grid_fragment" />
         <action
             android:id="@+id/action_gallery_to_photo"
-            app:destination="@id/photo_fragment" />
+            app:destination="@id/photo_fragment">
+            <argument
+                android:name="initialPosition"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </action>
     </fragment>
 
     <fragment
@@ -22,7 +27,12 @@
         android:label="MediaGridFragment">
         <action
             android:id="@+id/action_grid_to_photo"
-            app:destination="@id/photo_fragment" />
+            app:destination="@id/photo_fragment">
+            <argument
+                android:name="initialPosition"
+                app:argType="integer"
+                android:defaultValue="0" />
+        </action>
     </fragment>
 
     <fragment
@@ -30,8 +40,9 @@
         android:name="com.elink.aigallery.fragments.PhotoFragment"
         android:label="PhotoFragment">
         <argument
-            android:name="imagePath"
-            app:argType="string" />
+            android:name="initialPosition"
+            app:argType="integer"
+            android:defaultValue="0" />
     </fragment>
 
 </navigation>

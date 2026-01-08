@@ -11,13 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import coil.load
 import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentPhotoBinding
 import com.elink.aigallery.ui.gallery.GalleryViewModel
+import com.elink.aigallery.ui.gallery.PhotoPagerAdapter
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import java.io.File
 
 class PhotoFragment : Fragment() {
 
@@ -38,19 +37,27 @@ class PhotoFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val path = args.imagePath
-        binding.photoView.load(File(path)) {
-            crossfade(true)
-        }
+        val adapter = PhotoPagerAdapter()
+        binding.photoPager.adapter = adapter
 
         binding.btnDelete.setOnClickListener {
-            viewModel.requestDeletePath(path)
+            val position = binding.photoPager.currentItem
+            val item = adapter.currentList.getOrNull(position) ?: return@setOnClickListener
+            viewModel.requestDelete(listOf(item))
         }
 
+        var hasSetInitial = false
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.deletionEvent.collect {
-                    findNavController().popBackStack()
+                viewModel.currentPhotoList.collectLatest { items ->
+                    adapter.submitList(items)
+                    if (!hasSetInitial && items.isNotEmpty()) {
+                        val target = args.initialPosition.coerceIn(0, items.lastIndex)
+                        binding.photoPager.setCurrentItem(target, false)
+                        hasSetInitial = true
+                    } else if (hasSetInitial && items.isEmpty()) {
+                        findNavController().popBackStack()
+                    }
                 }
             }
         }
