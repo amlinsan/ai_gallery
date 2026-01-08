@@ -16,12 +16,13 @@
 -->
 
 <resources>
-    <!-- TF Branding Orange -->
-    <color name="bounding_box_color">#FF6F00</color>
-    <color name="toolbar_background">#EEEEEE</color>
+    <!-- Semantic Colors -->
+    <color name="text_primary">#000000</color>
+    <color name="background_toolbar">#EEEEEE</color>
+    <color name="background_bottom_sheet">#EEEEEE</color>
+    
+    <!-- Legacy/TF Branding Colors (keep for now if needed, or refactor) -->
     <color name="ic_launcher_background">#FFFFFF</color>
-    <color name="bottom_sheet_background">#EEEEEE</color>
-    <color name="bottom_sheet_text_color">@android:color/black</color>
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>
