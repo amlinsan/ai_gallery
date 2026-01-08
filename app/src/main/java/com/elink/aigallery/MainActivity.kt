@@ -19,6 +19,7 @@ package com.elink.aigallery
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.view.WindowCompat
 import com.elink.aigallery.databinding.ActivityMainBinding
 import com.elink.aigallery.worker.TaggingWorkScheduler
 
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
         TaggingWorkScheduler.schedule(applicationContext)

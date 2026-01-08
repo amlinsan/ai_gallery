@@ -17,6 +17,7 @@ import com.elink.aigallery.ai.FaceEmbeddingHelper
 import com.elink.aigallery.data.db.FaceEmbedding
 import com.elink.aigallery.data.db.MediaFaceAnalysis
 import com.elink.aigallery.data.db.PersonEntity
+import com.elink.aigallery.data.db.MediaTagAnalysis
 import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.data.repository.PersonRepository
 import com.google.mlkit.vision.common.InputImage
@@ -36,7 +37,9 @@ class TaggingWorker(
 ) : CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
-        if (!hasReadPermission(applicationContext)) {
+        val hasPermission = hasReadPermission(applicationContext)
+        MyLog.i(TAG, "Worker start, hasPermission=$hasPermission")
+        if (!hasPermission) {
             MyLog.w(TAG, "Media permission not granted. Skip tagging.")
             return@withContext Result.success()
         }
@@ -72,8 +75,12 @@ class TaggingWorker(
         mediaRepository: MediaRepository,
         classifier: ImageClassifierHelper
     ) {
-        var batch = mediaRepository.getUntaggedImages(BATCH_LIMIT)
+        var batch = mediaRepository.getImagesWithoutTagAnalysis(BATCH_LIMIT)
+        if (batch.isEmpty()) {
+            MyLog.i(TAG, "No images pending label analysis")
+        }
         while (batch.isNotEmpty() && !isStopped) {
+            MyLog.i(TAG, "Tagging batch size=${batch.size}")
             for (item in batch) {
                 if (isStopped) break
                 val bitmap = decodeScaledBitmap(
@@ -81,16 +88,32 @@ class TaggingWorker(
                     MAX_EDGE_CLASSIFY,
                     Bitmap.Config.ARGB_8888
                 ) ?: continue
+                val now = System.currentTimeMillis()
                 try {
                     val labels = classifier.classifyLabels(bitmap)
                     mediaRepository.insertTags(item.id, labels)
+                    mediaRepository.upsertMediaTagAnalysis(
+                        MediaTagAnalysis(
+                            mediaId = item.id,
+                            labelCount = labels.size,
+                            processedAt = now
+                        )
+                    )
+                    MyLog.i(TAG, "Tags for ${item.id}: count=${labels.size}")
                 } catch (e: Exception) {
                     MyLog.e(TAG, "Image tagging failed: ${item.path}", e)
+                    mediaRepository.upsertMediaTagAnalysis(
+                        MediaTagAnalysis(
+                            mediaId = item.id,
+                            labelCount = 0,
+                            processedAt = now
+                        )
+                    )
                 } finally {
                     bitmap.recycle()
                 }
             }
-            batch = mediaRepository.getUntaggedImages(BATCH_LIMIT)
+            batch = mediaRepository.getImagesWithoutTagAnalysis(BATCH_LIMIT)
         }
     }
 
@@ -105,7 +128,11 @@ class TaggingWorker(
             .toMutableList()
 
         var batch = personRepository.getImagesWithoutFaceAnalysis(BATCH_LIMIT)
+        if (batch.isEmpty()) {
+            MyLog.i(TAG, "No images pending face analysis")
+        }
         while (batch.isNotEmpty() && !isStopped) {
+            MyLog.i(TAG, "Face analysis batch size=${batch.size}")
             for (item in batch) {
                 if (isStopped) break
                 val bitmap = decodeScaledBitmap(
@@ -120,8 +147,14 @@ class TaggingWorker(
                     mediaRepository.insertTags(item.id, listOf(PERSON_TAG))
                     for (face in faces) {
                         val cropped = cropFace(bitmap, face.boundingBox) ?: continue
-                        val vector = faceEmbeddingHelper.embed(cropped)
+                        val vector = try {
+                            faceEmbeddingHelper.embed(cropped)
+                        } catch (e: Exception) {
+                            MyLog.e(TAG, "Face embedding failed for ${item.id}", e)
+                            null
+                        }
                         cropped.recycle()
+                        if (vector == null) continue
 
                         val matched = matchPerson(vector, people, personRepository, now)
                         val rect = face.boundingBox
@@ -282,11 +315,12 @@ class TaggingWorker(
                 val hasVideo = isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
                 val hasSelected =
                     isGranted(context, Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
-                (hasImages && hasVideo) || hasSelected
+                hasImages || hasVideo || hasSelected
             }
             Build.VERSION.SDK_INT >= 33 -> {
-                isGranted(context, Manifest.permission.READ_MEDIA_IMAGES) &&
-                    isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
+                val hasImages = isGranted(context, Manifest.permission.READ_MEDIA_IMAGES)
+                val hasVideo = isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
+                hasImages || hasVideo
             }
             else -> isGranted(context, Manifest.permission.READ_EXTERNAL_STORAGE)
         }

@@ -25,6 +25,7 @@ import com.elink.aigallery.ui.gallery.CategoryAdapter
 import com.elink.aigallery.ui.gallery.FolderAdapter
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.ui.gallery.MediaItemAdapter
+import com.elink.aigallery.worker.TaggingWorkScheduler
 import kotlinx.coroutines.launch
 
 class GalleryFragment : Fragment() {
@@ -42,6 +43,7 @@ class GalleryFragment : Fragment() {
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { result ->
             if (hasMediaPermissions()) {
                 startScan()
+                TaggingWorkScheduler.schedule(requireContext().applicationContext)
             } else {
                 Toast.makeText(requireContext(), "请授予相册访问权限", Toast.LENGTH_SHORT).show()
             }
@@ -156,6 +158,7 @@ class GalleryFragment : Fragment() {
 
         if (hasMediaPermissions()) {
             startScan()
+            TaggingWorkScheduler.schedule(requireContext().applicationContext)
         } else {
             updateContentState(hasData = false)
         }

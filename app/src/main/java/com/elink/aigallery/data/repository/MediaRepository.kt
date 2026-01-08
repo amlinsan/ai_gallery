@@ -7,6 +7,7 @@ import com.elink.aigallery.data.db.AppDatabase
 import com.elink.aigallery.data.db.FolderWithImages
 import com.elink.aigallery.data.db.ImageTag
 import com.elink.aigallery.data.db.MediaItem
+import com.elink.aigallery.data.db.MediaTagAnalysis
 import kotlinx.coroutines.flow.Flow
 
 class MediaRepository(context: Context) {
@@ -71,8 +72,12 @@ class MediaRepository(context: Context) {
         return mediaDao.getImagesByLabel(label)
     }
 
-    suspend fun getUntaggedImages(limit: Int): List<MediaItem> {
-        return mediaDao.getUntaggedImages(limit)
+    suspend fun getImagesWithoutTagAnalysis(limit: Int): List<MediaItem> {
+        return mediaDao.getImagesWithoutTagAnalysis(limit)
+    }
+
+    suspend fun upsertMediaTagAnalysis(analysis: MediaTagAnalysis) {
+        mediaDao.upsertMediaTagAnalysis(analysis)
     }
 
     suspend fun insertTags(mediaId: Long, labels: List<String>) {

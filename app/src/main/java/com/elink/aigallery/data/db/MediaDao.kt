@@ -37,13 +37,16 @@ interface MediaDao {
     @Query(
         """
         SELECT m.* FROM media_items AS m
-        LEFT JOIN image_tags AS t ON m.id = t.mediaId
-        WHERE t.mediaId IS NULL
+        LEFT JOIN media_tag_analysis AS a ON m.id = a.mediaId
+        WHERE a.mediaId IS NULL
         ORDER BY m.dateTaken DESC
         LIMIT :limit
         """
     )
-    suspend fun getUntaggedImages(limit: Int): List<MediaItem>
+    suspend fun getImagesWithoutTagAnalysis(limit: Int): List<MediaItem>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertMediaTagAnalysis(analysis: MediaTagAnalysis)
 
     @Query(
         """

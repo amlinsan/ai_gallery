@@ -13,9 +13,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ImageTag::class,
         PersonEntity::class,
         FaceEmbedding::class,
-        MediaFaceAnalysis::class
+        MediaFaceAnalysis::class,
+        MediaTagAnalysis::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -33,7 +34,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "elink_ai_gallery.db"
                 )
-                    .addMigrations(MIGRATION_1_2)
+                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3)
                     .build()
                     .also { INSTANCE = it }
             }
@@ -93,6 +94,25 @@ abstract class AppDatabase : RoomDatabase() {
                 )
                 db.execSQL(
                     "CREATE INDEX IF NOT EXISTS `index_media_face_analysis_mediaId` ON `media_face_analysis` (`mediaId`)"
+                )
+            }
+        }
+
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    """
+                    CREATE TABLE IF NOT EXISTS `media_tag_analysis` (
+                        `mediaId` INTEGER NOT NULL,
+                        `labelCount` INTEGER NOT NULL,
+                        `processedAt` INTEGER NOT NULL,
+                        PRIMARY KEY(`mediaId`),
+                        FOREIGN KEY(`mediaId`) REFERENCES `media_items`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE
+                    )
+                    """.trimIndent()
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_media_tag_analysis_mediaId` ON `media_tag_analysis` (`mediaId`)"
                 )
             }
         }
