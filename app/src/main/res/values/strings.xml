@@ -42,7 +42,7 @@
     <string name="gallery_search_hint">搜索标签，例如 cat / 风景</string>
     <string name="gallery_search_empty_hint">未找到匹配图片</string>
     <string name="gallery_category_empty_hint">暂无智能分类结果</string>
-    <string name="gallery_tab_folders">相册</string>
+    <string name="gallery_tab_folders">文件夹</string>
     <string name="gallery_tab_categories">智能分类</string>
 
     <string-array name="delegate_spinner_titles">
