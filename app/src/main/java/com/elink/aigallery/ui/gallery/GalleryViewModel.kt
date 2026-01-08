@@ -16,8 +16,10 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class GalleryViewModel(
     private val repository: MediaRepository
@@ -89,6 +91,52 @@ class GalleryViewModel(
     fun selectCategory(category: CategoryAlbum) {
         _selectedAlbumTitle.value = category.title
         _selectedAlbumItems.value = category.items
+    }
+
+    private val _deletePendingIntent = MutableStateFlow<android.app.PendingIntent?>(null)
+    val deletePendingIntent: StateFlow<android.app.PendingIntent?> = _deletePendingIntent
+
+    private var pendingDeleteItems: List<MediaItem> = emptyList()
+
+    fun requestDelete(items: List<MediaItem>) {
+        if (items.isEmpty()) return
+        pendingDeleteItems = items
+        _deletePendingIntent.value = repository.createDeleteRequest(items)
+    }
+
+    fun requestDeletePath(path: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.getMediaItemByPath(path)?.let { item ->
+                requestDelete(listOf(item))
+            }
+        }
+    }
+
+    private val _deletionEvent = kotlinx.coroutines.flow.MutableSharedFlow<Unit>()
+    val deletionEvent = _deletionEvent.asSharedFlow()
+
+    fun onDeleteConfirmed() {
+        val itemsToDelete = pendingDeleteItems
+        if (itemsToDelete.isEmpty()) {
+            _deletePendingIntent.value = null
+            return
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            val deleteIds = itemsToDelete.map { it.id }
+            repository.deleteFromDb(deleteIds)
+            val deleteIdSet = deleteIds.toSet()
+            withContext(Dispatchers.Main) {
+                _selectedAlbumItems.value =
+                    _selectedAlbumItems.value.filterNot { deleteIdSet.contains(it.id) }
+                pendingDeleteItems = emptyList()
+                _deletePendingIntent.value = null
+                _deletionEvent.emit(Unit)
+            }
+        }
+    }
+
+    fun consumeDeleteIntent() {
+        _deletePendingIntent.value = null
     }
 
     fun scanLocalMedia() {

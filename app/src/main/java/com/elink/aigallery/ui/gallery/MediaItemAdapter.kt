@@ -11,7 +11,8 @@ import com.elink.aigallery.databinding.ItemMediaBinding
 import java.io.File
 
 class MediaItemAdapter(
-    private val onClick: (MediaItem) -> Unit
+    private val onClick: (MediaItem) -> Unit,
+    private val onLongClick: (MediaItem) -> Unit
 ) : ListAdapter<MediaItem, MediaItemAdapter.MediaViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MediaViewHolder {
@@ -20,7 +21,7 @@ class MediaItemAdapter(
             parent,
             false
         )
-        return MediaViewHolder(binding, onClick)
+        return MediaViewHolder(binding, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: MediaViewHolder, position: Int) {
@@ -29,7 +30,8 @@ class MediaItemAdapter(
 
     class MediaViewHolder(
         private val binding: ItemMediaBinding,
-        private val onClick: (MediaItem) -> Unit
+        private val onClick: (MediaItem) -> Unit,
+        private val onLongClick: (MediaItem) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: MediaItem) {
@@ -37,6 +39,10 @@ class MediaItemAdapter(
                 crossfade(true)
             }
             binding.root.setOnClickListener { onClick(item) }
+            binding.root.setOnLongClickListener {
+                onLongClick(item)
+                true
+            }
         }
     }
 

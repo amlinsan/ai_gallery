@@ -11,7 +11,8 @@ import com.elink.aigallery.databinding.ItemFolderBinding
 import java.io.File
 
 class FolderAdapter(
-    private val onClick: (FolderWithImages) -> Unit
+    private val onClick: (FolderWithImages) -> Unit,
+    private val onLongClick: (FolderWithImages) -> Unit
 ) : ListAdapter<FolderWithImages, FolderAdapter.FolderViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FolderViewHolder {
@@ -20,7 +21,7 @@ class FolderAdapter(
             parent,
             false
         )
-        return FolderViewHolder(binding, onClick)
+        return FolderViewHolder(binding, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: FolderViewHolder, position: Int) {
@@ -29,7 +30,8 @@ class FolderAdapter(
 
     class FolderViewHolder(
         private val binding: ItemFolderBinding,
-        private val onClick: (FolderWithImages) -> Unit
+        private val onClick: (FolderWithImages) -> Unit,
+        private val onLongClick: (FolderWithImages) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(folder: FolderWithImages) {
@@ -44,6 +46,10 @@ class FolderAdapter(
             binding.folderName.text = folder.folderName
             binding.folderCount.text = folder.items.size.toString()
             binding.root.setOnClickListener { onClick(folder) }
+            binding.root.setOnLongClickListener {
+                onLongClick(folder)
+                true
+            }
         }
     }
 

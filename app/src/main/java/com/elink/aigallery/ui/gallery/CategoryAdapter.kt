@@ -11,7 +11,8 @@ import com.elink.aigallery.databinding.ItemCategoryBinding
 import java.io.File
 
 class CategoryAdapter(
-    private val onClick: (CategoryAlbum) -> Unit
+    private val onClick: (CategoryAlbum) -> Unit,
+    private val onLongClick: (CategoryAlbum) -> Unit
 ) : ListAdapter<CategoryAlbum, CategoryAdapter.CategoryViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -20,7 +21,7 @@ class CategoryAdapter(
             parent,
             false
         )
-        return CategoryViewHolder(binding, onClick)
+        return CategoryViewHolder(binding, onClick, onLongClick)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
@@ -29,7 +30,8 @@ class CategoryAdapter(
 
     class CategoryViewHolder(
         private val binding: ItemCategoryBinding,
-        private val onClick: (CategoryAlbum) -> Unit
+        private val onClick: (CategoryAlbum) -> Unit,
+        private val onLongClick: (CategoryAlbum) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(category: CategoryAlbum) {
@@ -44,6 +46,10 @@ class CategoryAdapter(
             binding.categoryName.text = category.title
             binding.categoryCount.text = category.items.size.toString()
             binding.root.setOnClickListener { onClick(category) }
+            binding.root.setOnLongClickListener {
+                onLongClick(category)
+                true
+            }
         }
     }
 

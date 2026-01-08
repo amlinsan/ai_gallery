@@ -71,4 +71,16 @@ interface MediaDao {
         """
     )
     fun getImagesByLabel(label: String): Flow<List<MediaItem>>
+
+    @Query("DELETE FROM media_items WHERE path = :path")
+    suspend fun deleteMediaItemByPath(path: String)
+
+    @Query("DELETE FROM media_items WHERE id IN (:ids)")
+    suspend fun deleteMediaItems(ids: List<Long>)
+
+    @Query("SELECT * FROM media_items WHERE path = :path LIMIT 1")
+    suspend fun getMediaItemByPath(path: String): MediaItem?
+
+    @Query("UPDATE media_items SET mediaStoreId = :mediaStoreId, dateTaken = :dateTaken, width = :width, height = :height WHERE path = :path")
+    suspend fun updateMediaItemInfo(path: String, mediaStoreId: Long, dateTaken: Long, width: Int, height: Int): Int
 }

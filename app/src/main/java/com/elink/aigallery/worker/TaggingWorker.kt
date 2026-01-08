@@ -322,7 +322,7 @@ class TaggingWorker(
                 val hasVideo = isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
                 hasImages || hasVideo
             }
-            else -> isGranted(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+            else -> false
         }
     }
 

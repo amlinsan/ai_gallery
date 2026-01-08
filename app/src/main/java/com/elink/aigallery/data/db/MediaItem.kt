@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey
 )
 data class MediaItem(
     @PrimaryKey(autoGenerate = true) val id: Long = 0L,
+    val mediaStoreId: Long,
     val path: String,
     val dateTaken: Long,
     val folderName: String,

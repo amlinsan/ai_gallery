@@ -25,6 +25,7 @@ import com.elink.aigallery.ui.gallery.GalleryPagerAdapter
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.ui.gallery.MediaItemAdapter
 import com.elink.aigallery.worker.TaggingWorkScheduler
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 
@@ -69,10 +70,15 @@ class GalleryFragment : Fragment() {
         }.attach()
 
         // Setup Search Adapter
-        val mediaAdapter = MediaItemAdapter { item ->
-            val action = GalleryFragmentDirections.actionGalleryToPhoto(item.path)
-            findNavController().navigate(action)
-        }
+        val mediaAdapter = MediaItemAdapter(
+            onClick = { item ->
+                val action = GalleryFragmentDirections.actionGalleryToPhoto(item.path)
+                findNavController().navigate(action)
+            },
+            onLongClick = { item ->
+                showDeleteConfirmDialog(item)
+            }
+        )
         
         binding.searchList.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.searchList.adapter = mediaAdapter
@@ -132,6 +138,17 @@ class GalleryFragment : Fragment() {
         viewModel.scanLocalMedia()
     }
 
+    private fun showDeleteConfirmDialog(item: com.elink.aigallery.data.db.MediaItem) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_confirmation_title)
+            .setMessage(R.string.action_delete)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                viewModel.requestDelete(listOf(item))
+            }
+            .show()
+    }
+
     private fun requiredPermissions(): Array<String> {
         return when {
             Build.VERSION.SDK_INT >= 34 -> arrayOf(
@@ -143,7 +160,7 @@ class GalleryFragment : Fragment() {
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.READ_MEDIA_VIDEO
             )
-            else -> arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+            else -> emptyArray()
         }
     }
 
@@ -155,13 +172,14 @@ class GalleryFragment : Fragment() {
                 val hasVideo = isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
                 val hasSelected =
                     isGranted(context, Manifest.permission.READ_MEDIA_VISUAL_USER_SELECTED)
-                (hasImages && hasVideo) || hasSelected
+                hasImages || hasVideo || hasSelected
             }
             Build.VERSION.SDK_INT >= 33 -> {
-                isGranted(context, Manifest.permission.READ_MEDIA_IMAGES) &&
-                    isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
+                val hasImages = isGranted(context, Manifest.permission.READ_MEDIA_IMAGES)
+                val hasVideo = isGranted(context, Manifest.permission.READ_MEDIA_VIDEO)
+                hasImages || hasVideo
             }
-            else -> isGranted(context, Manifest.permission.READ_EXTERNAL_STORAGE)
+            else -> false
         }
     }
 

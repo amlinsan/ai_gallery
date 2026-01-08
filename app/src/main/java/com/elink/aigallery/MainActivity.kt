@@ -19,12 +19,34 @@ package com.elink.aigallery
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
+import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.ActivityMainBinding
+import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.worker.TaggingWorkScheduler
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
+    private val viewModel: GalleryViewModel by viewModels {
+        GalleryViewModel.Factory(MediaRepository(this))
+    }
+
+    private val deleteResultLauncher = registerForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == RESULT_OK) {
+            viewModel.onDeleteConfirmed()
+        } else {
+            viewModel.consumeDeleteIntent()
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +54,17 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
         TaggingWorkScheduler.schedule(applicationContext)
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.deletePendingIntent.collect { pendingIntent ->
+                    pendingIntent?.let {
+                        val request = IntentSenderRequest.Builder(it.intentSender).build()
+                        deleteResultLauncher.launch(request)
+                    }
+                }
+            }
+        }
     }
 
     override fun onBackPressed() {

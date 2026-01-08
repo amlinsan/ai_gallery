@@ -6,17 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.elink.aigallery.R
+import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentTabContentBinding
 import com.elink.aigallery.ui.gallery.CategoryAdapter
 import com.elink.aigallery.ui.gallery.FolderAdapter
 import com.elink.aigallery.ui.gallery.GalleryViewModel
+import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.launch
 
 class GalleryTabFragment : Fragment() {
@@ -25,7 +26,9 @@ class GalleryTabFragment : Fragment() {
     private val binding get() = _binding!!
     private var type: Int = TYPE_FOLDERS
 
-    private val viewModel: GalleryViewModel by activityViewModels()
+    private val viewModel: GalleryViewModel by activityViewModels {
+        GalleryViewModel.Factory(MediaRepository(requireContext()))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +50,19 @@ class GalleryTabFragment : Fragment() {
         binding.contentList.layoutManager = LinearLayoutManager(requireContext())
 
         if (type == TYPE_FOLDERS) {
-            val adapter = FolderAdapter { folder ->
-                viewModel.selectFolder(folder)
-                findNavController().navigate(R.id.action_gallery_to_grid)
-            }
+            val adapter = FolderAdapter(
+                onClick = { folder ->
+                    viewModel.selectFolder(folder)
+                    findNavController().navigate(R.id.action_gallery_to_grid)
+                },
+                onLongClick = { folder ->
+                    showDeleteConfirmDialog(
+                        title = getString(R.string.delete_confirmation_title),
+                        message = getString(R.string.delete_folder_warning),
+                        items = folder.items
+                    )
+                }
+            )
             binding.contentList.adapter = adapter
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -60,10 +72,19 @@ class GalleryTabFragment : Fragment() {
                 }
             }
         } else {
-            val adapter = CategoryAdapter { category ->
-                viewModel.selectCategory(category)
-                findNavController().navigate(R.id.action_gallery_to_grid)
-            }
+            val adapter = CategoryAdapter(
+                onClick = { category ->
+                    viewModel.selectCategory(category)
+                    findNavController().navigate(R.id.action_gallery_to_grid)
+                },
+                onLongClick = { category ->
+                    showDeleteConfirmDialog(
+                        title = getString(R.string.delete_confirmation_title),
+                        message = getString(R.string.delete_category_warning),
+                        items = category.items
+                    )
+                }
+            )
             binding.contentList.adapter = adapter
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -73,6 +94,17 @@ class GalleryTabFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showDeleteConfirmDialog(title: String, message: String, items: List<com.elink.aigallery.data.db.MediaItem>) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                viewModel.requestDelete(items)
+            }
+            .show()
     }
 
     override fun onDestroyView() {

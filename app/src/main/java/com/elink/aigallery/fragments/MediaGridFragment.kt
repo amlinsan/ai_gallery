@@ -15,6 +15,8 @@ import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentMediaGridBinding
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.ui.gallery.MediaItemAdapter
+import com.elink.aigallery.R
+import androidx.appcompat.app.AlertDialog
 import kotlinx.coroutines.launch
 
 class MediaGridFragment : Fragment() {
@@ -35,10 +37,15 @@ class MediaGridFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val adapter = MediaItemAdapter { item ->
-            val action = MediaGridFragmentDirections.actionGridToPhoto(item.path)
-            findNavController().navigate(action)
-        }
+        val adapter = MediaItemAdapter(
+            onClick = { item ->
+                val action = MediaGridFragmentDirections.actionGridToPhoto(item.path)
+                findNavController().navigate(action)
+            },
+            onLongClick = { item ->
+                showDeleteConfirmDialog(item)
+            }
+        )
         binding.gridList.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.gridList.adapter = adapter
 
@@ -49,6 +56,17 @@ class MediaGridFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showDeleteConfirmDialog(item: com.elink.aigallery.data.db.MediaItem) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(R.string.delete_confirmation_title)
+            .setMessage(R.string.action_delete)
+            .setNegativeButton(android.R.string.cancel, null)
+            .setPositiveButton(R.string.action_delete) { _, _ ->
+                viewModel.requestDelete(listOf(item))
+            }
+            .show()
     }
 
     override fun onDestroyView() {

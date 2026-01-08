@@ -3,6 +3,7 @@
 ## 0. 使用与变更边界 (Usage & Boundaries)
 - 本文档是 AI AGENTS 的强约束规范；如与其他文档冲突，以本文件为准并主动确认。
 - 默认进行**最小必要改动**，避免破坏性修改（大规模删除/迁移/重命名/重构/架构调整）。
+- 涉及架构/导航/数据结构/资源命名/大范围 UI 调整时，需先说明影响范围并获得确认。
 
 ## 1. 项目概述 (Project Overview)
 **项目名称:** ElinkAIGallery
@@ -11,12 +12,13 @@
 - **多维浏览**: 支持按“文件夹”物理路径显示，也支持按“AI 智能分类”显示。
 - **智能分类**: 自动识别图片内容并归类为：人物、美食、风景等。
 - **人脸聚类**: 在“人物”分类下，进一步按不同的人脸特征进行二级目录分发浏览。
+- **安全删除**: 支持单图/批量删除，必须走系统确认流程，删除后以 Room 为准刷新 UI。
 - **隐私优先**: 所有的 AI 分析（分类、人脸聚类）必须在**端侧 (On-device)** 完成。
 
 ## 2. Agent 开发分工指引
-- **Data Agent (数据侧)**: 负责 MediaStore 扫描、Room 数据库设计（MediaItem/Tag/FaceEntity）及 Repository 层。
+- **Data Agent (数据侧)**: 负责 MediaStore 扫描、Room 数据库设计（MediaItem/Tag/FaceEntity）及 Repository 层。删除逻辑使用 MediaStore API，并适配 Scoped Storage (IntentSender)，删除后同步 Room。
 - **AI Agent (算法侧)**: 负责集成 ML Kit/TFLite，实现场景识别与人脸特征提取的 WorkManager 后台任务。
-- **UI Agent (视图侧)**: 负责 XML 布局实现、ViewBinding 绑定、多语言适配及 ViewModel 状态驱动。
+- **UI Agent (视图侧)**: 负责 XML 布局实现、ViewBinding 绑定、多语言适配及 ViewModel 状态驱动。删除交互需显式确认（系统弹窗），并对批量/智能分类删除做二次提示。
 
 ## 3. 技术栈约束 (Tech Stack Constraints)
 - **语言**: 100% Kotlin。
@@ -26,8 +28,9 @@
 - **日志规范**: 统一使用 `utils/MyLog`，Tag 固定为 `elink_aig`。
 
 ## 4. 编码规范 (Coding Standards)
-- **权限处理**: 适配 Android 13/14/15 媒体权限（READ_MEDIA_IMAGES 等）。
-- **资源规范**: 严禁硬编码颜色、尺寸、字符串。所有文本需通过 `strings.xml` 支持中英文。
+- **权限处理**: 适配 Android 13/14/15 媒体权限（READ_MEDIA_IMAGES 等）。删除操作需适配 Android 10+ 的 `RecoverableSecurityException` 及 Android 11+ 的 `createDeleteRequest`。
+- **资源规范**: 严禁硬编码颜色、尺寸、字符串。所有文本需通过 `strings.xml` 支持中英文；详细规则见 `UI_UE_Design.md`。
+- **删除规范**: 禁止静默删除，必须经过系统级确认流程。
 - **错误处理**: I/O 与 AI 推理必须在 `Dispatchers.IO` 执行。
 
 ## 5. 禁止事项 (Negative Constraints)

@@ -10,8 +10,11 @@ import com.elink.aigallery.data.db.MediaItem
 import com.elink.aigallery.data.db.MediaTagAnalysis
 import kotlinx.coroutines.flow.Flow
 
+import androidx.room.withTransaction
+
 class MediaRepository(context: Context) {
-    private val mediaDao = AppDatabase.getInstance(context).mediaDao()
+    private val database = AppDatabase.getInstance(context)
+    private val mediaDao = database.mediaDao()
     private val contentResolver: ContentResolver = context.contentResolver
 
     fun observeFolders(): Flow<List<FolderWithImages>> = mediaDao.getImagesByFolder()
@@ -34,6 +37,7 @@ class MediaRepository(context: Context) {
             null,
             "${MediaStore.Images.Media.DATE_TAKEN} DESC"
         )?.use { cursor ->
+            val idIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media._ID)
             val pathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
             val dateIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_TAKEN)
             val widthIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.WIDTH)
@@ -41,6 +45,7 @@ class MediaRepository(context: Context) {
             val folderIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
 
             while (cursor.moveToNext()) {
+                val mediaStoreId = cursor.getLong(idIndex)
                 val path = cursor.getString(pathIndex) ?: continue
                 val dateTaken = cursor.getLong(dateIndex)
                 val width = cursor.getInt(widthIndex)
@@ -49,6 +54,7 @@ class MediaRepository(context: Context) {
 
                 items.add(
                     MediaItem(
+                        mediaStoreId = mediaStoreId,
                         path = path,
                         dateTaken = dateTaken,
                         folderName = folderName,
@@ -60,8 +66,39 @@ class MediaRepository(context: Context) {
         }
 
         if (items.isNotEmpty()) {
-            mediaDao.insertMediaItems(items)
+            database.withTransaction {
+                mediaDao.insertMediaItems(items)
+                items.forEach {
+                    mediaDao.updateMediaItemInfo(it.path, it.mediaStoreId, it.dateTaken, it.width, it.height)
+                }
+            }
         }
+    }
+
+    fun createDeleteRequest(mediaItems: List<MediaItem>): android.app.PendingIntent? {
+        if (mediaItems.isEmpty()) return null
+        if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU) {
+            return null
+        }
+        val uris = mediaItems.map { item ->
+            android.content.ContentUris.withAppendedId(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                item.mediaStoreId
+            )
+        }
+        return MediaStore.createDeleteRequest(contentResolver, uris)
+    }
+
+    suspend fun deleteFromDb(path: String) {
+        mediaDao.deleteMediaItemByPath(path)
+    }
+
+    suspend fun deleteFromDb(ids: List<Long>) {
+        mediaDao.deleteMediaItems(ids)
+    }
+
+    suspend fun getMediaItemByPath(path: String): MediaItem? {
+        return mediaDao.getMediaItemByPath(path)
     }
 
     fun searchImages(query: String, mappedQuery: String): Flow<List<MediaItem>> {
