@@ -411,7 +411,7 @@ class TaggingWorker(
         private const val TAG = "TaggingWorker"
         private const val BATCH_LIMIT = 50
         private const val MAX_EDGE_CLASSIFY = 1024
-        private const val MAX_EDGE_FACE = 640
+        private const val MAX_EDGE_FACE = 800
         private const val FACE_MARGIN_RATIO = 0.2f
         private const val MIN_FACE_AREA_RATIO = 0.01f
         private const val PERSON_MATCH_THRESHOLD = 0.6f
