@@ -128,6 +128,10 @@ class ImageClassifierHelper(
     }
 
     fun classifyLabels(image: Bitmap): List<String> {
+        return classifyLabelsWithScores(image).map { it.label }
+    }
+
+    fun classifyLabelsWithScores(image: Bitmap): List<LabelScore> {
         synchronized(classifierLock) {
             if (imageClassifier == null) {
                 setupImageClassifier()
@@ -139,8 +143,8 @@ class ImageClassifierHelper(
             val labels = results
                 .flatMap { it.categories }
                 .sortedByDescending { it.score }
-                .map { it.label }
-                .distinct()
+                .map { LabelScore(it.label, it.score) }
+                .distinctBy { it.label }
                 .take(maxResults)
             if (inputBitmap !== image) {
                 inputBitmap.recycle()
@@ -204,4 +208,6 @@ class ImageClassifierHelper(
             }
         }
     }
+
+    data class LabelScore(val label: String, val score: Float)
 }

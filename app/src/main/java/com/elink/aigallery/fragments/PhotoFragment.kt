@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentPhotoBinding
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.ui.gallery.PhotoPagerAdapter
@@ -24,7 +23,7 @@ class PhotoFragment : Fragment() {
     private val binding get() = _binding!!
     private val args: PhotoFragmentArgs by navArgs()
     private val viewModel: GalleryViewModel by activityViewModels {
-        GalleryViewModel.Factory(MediaRepository(requireContext()))
+        GalleryViewModel.Factory(requireContext())
     }
 
     override fun onCreateView(

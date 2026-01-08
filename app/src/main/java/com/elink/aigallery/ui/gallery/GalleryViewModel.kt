@@ -1,14 +1,17 @@
 package com.elink.aigallery.ui.gallery
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.elink.aigallery.R
 import com.elink.aigallery.data.db.FolderWithImages
 import com.elink.aigallery.data.db.MediaItem
 import com.elink.aigallery.data.model.CategoryAlbum
 import com.elink.aigallery.data.repository.MediaRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -16,13 +19,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class GalleryViewModel(
-    private val repository: MediaRepository
+    private val repository: MediaRepository,
+    private val categoryTitles: CategoryTitles
 ) : ViewModel() {
 
     val folders: StateFlow<List<FolderWithImages>> = repository.observeFolders()
@@ -72,9 +75,9 @@ class GalleryViewModel(
     val categories: StateFlow<List<CategoryAlbum>> =
         combine(personFlow, foodFlow, natureFlow) { person, food, nature ->
             listOf(
-                CategoryAlbum(title = "人物", items = person),
-                CategoryAlbum(title = "美食", items = food),
-                CategoryAlbum(title = "风景", items = nature)
+                CategoryAlbum(title = categoryTitles.people, items = person),
+                CategoryAlbum(title = categoryTitles.food, items = food),
+                CategoryAlbum(title = categoryTitles.nature, items = nature)
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
@@ -155,12 +158,26 @@ class GalleryViewModel(
         searchQuery.value = query
     }
 
+    data class CategoryTitles(
+        val people: String,
+        val food: String,
+        val nature: String
+    )
+
     class Factory(
-        private val repository: MediaRepository
+        context: Context
     ) : ViewModelProvider.Factory {
+        private val appContext = context.applicationContext
+        private val repository = MediaRepository(appContext)
+        private val categoryTitles = CategoryTitles(
+            people = appContext.getString(R.string.category_people),
+            food = appContext.getString(R.string.category_food),
+            nature = appContext.getString(R.string.category_nature)
+        )
+
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return GalleryViewModel(repository) as T
+            return GalleryViewModel(repository, categoryTitles) as T
         }
     }
 }

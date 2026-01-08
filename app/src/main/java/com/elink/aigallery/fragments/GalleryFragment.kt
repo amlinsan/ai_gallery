@@ -19,7 +19,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.elink.aigallery.R
-import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentGalleryBinding
 import com.elink.aigallery.ui.gallery.GalleryPagerAdapter
 import com.elink.aigallery.ui.gallery.GalleryViewModel
@@ -36,7 +35,7 @@ class GalleryFragment : Fragment() {
     private var hasLoadedOnce = false
 
     private val viewModel: GalleryViewModel by activityViewModels {
-        GalleryViewModel.Factory(MediaRepository(requireContext()))
+        GalleryViewModel.Factory(requireContext())
     }
 
     private val permissionLauncher =
@@ -45,7 +44,11 @@ class GalleryFragment : Fragment() {
                 startScan()
                 TaggingWorkScheduler.schedule(requireContext().applicationContext)
             } else {
-                Toast.makeText(requireContext(), "请授予相册访问权限", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.gallery_permission_toast),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             updateContentState(hasData = false)
         }

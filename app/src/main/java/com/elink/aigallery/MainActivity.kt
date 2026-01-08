@@ -26,7 +26,6 @@ import androidx.core.view.WindowCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.ActivityMainBinding
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.worker.TaggingWorkScheduler
@@ -35,7 +34,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
     private val viewModel: GalleryViewModel by viewModels {
-        GalleryViewModel.Factory(MediaRepository(this))
+        GalleryViewModel.Factory(this)
     }
 
     private val deleteResultLauncher = registerForActivityResult(

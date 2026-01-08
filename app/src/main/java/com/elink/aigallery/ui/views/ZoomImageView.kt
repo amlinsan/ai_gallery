@@ -14,7 +14,7 @@ class ZoomImageView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : AppCompatImageView(context, attrs, defStyleAttr), ScaleGestureDetector.OnScaleGestureListener,
-    GestureDetector.OnGestureListener {
+    GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private var scaleDetector: ScaleGestureDetector = ScaleGestureDetector(context, this)
     private var gestureDetector: GestureDetector = GestureDetector(context, this)
@@ -36,6 +36,7 @@ class ZoomImageView @JvmOverloads constructor(
     init {
         imageMatrix = matrixCurrent
         scaleType = ScaleType.MATRIX
+        gestureDetector.setOnDoubleTapListener(this)
         setOnTouchListener { _, event ->
             scaleDetector.onTouchEvent(event)
             gestureDetector.onTouchEvent(event)
@@ -153,6 +154,22 @@ class ZoomImageView @JvmOverloads constructor(
     override fun onDown(e: MotionEvent): Boolean = false
     override fun onShowPress(e: MotionEvent) {}
     override fun onSingleTapUp(e: MotionEvent): Boolean = false
+    override fun onSingleTapConfirmed(e: MotionEvent): Boolean = false
+    override fun onDoubleTap(e: MotionEvent): Boolean {
+        if (drawable == null) return false
+        if (mSaveScale > minScale) {
+            resetZoom()
+            return true
+        }
+        val targetScale = maxScale
+        val scaleFactor = targetScale / mSaveScale
+        mSaveScale = targetScale
+        matrixCurrent.postScale(scaleFactor, scaleFactor, e.x, e.y)
+        setImageMatrix(matrixCurrent)
+        invalidate()
+        return true
+    }
+    override fun onDoubleTapEvent(e: MotionEvent): Boolean = false
     override fun onScroll(e1: MotionEvent?, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean = false
     override fun onLongPress(e: MotionEvent) {}
     override fun onFling(e1: MotionEvent?, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean = false

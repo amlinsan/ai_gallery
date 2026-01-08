@@ -3,6 +3,7 @@
     <string name="app_name">ElinkAIGallery</string>
 
     <string name="gallery_permission_hint">Permission required to access gallery</string>
+    <string name="gallery_permission_toast">Please grant gallery access permission</string>
     <string name="gallery_empty_hint">No images found</string>
     <string name="gallery_request_permission">Grant Permission</string>
     <string name="gallery_search_hint">Search tags, e.g., cat</string>
@@ -11,4 +12,7 @@
     <string name="gallery_tab_folders">Folders</string>
     <string name="gallery_tab_categories">Smart Categories</string>
     <string name="gallery_title_album">Album</string>
+    <string name="category_people">People</string>
+    <string name="category_food">Food</string>
+    <string name="category_nature">Nature</string>
 </resources>

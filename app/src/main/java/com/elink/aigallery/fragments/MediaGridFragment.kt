@@ -11,7 +11,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentMediaGridBinding
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.ui.gallery.MediaItemAdapter
@@ -24,7 +23,7 @@ class MediaGridFragment : Fragment() {
     private var _binding: FragmentMediaGridBinding? = null
     private val binding get() = _binding!!
     private val viewModel: GalleryViewModel by activityViewModels {
-        GalleryViewModel.Factory(MediaRepository(requireContext()))
+        GalleryViewModel.Factory(requireContext())
     }
 
     override fun onCreateView(

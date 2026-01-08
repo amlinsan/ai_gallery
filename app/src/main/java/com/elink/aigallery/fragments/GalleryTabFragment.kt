@@ -12,7 +12,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.elink.aigallery.R
-import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.databinding.FragmentTabContentBinding
 import com.elink.aigallery.ui.gallery.CategoryAdapter
 import com.elink.aigallery.ui.gallery.FolderAdapter
@@ -27,7 +26,7 @@ class GalleryTabFragment : Fragment() {
     private var type: Int = TYPE_FOLDERS
 
     private val viewModel: GalleryViewModel by activityViewModels {
-        GalleryViewModel.Factory(MediaRepository(requireContext()))
+        GalleryViewModel.Factory(requireContext())
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

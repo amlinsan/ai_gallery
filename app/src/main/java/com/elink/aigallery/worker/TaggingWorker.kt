@@ -29,6 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.Locale
 import kotlin.coroutines.resume
 
 class TaggingWorker(
@@ -90,7 +91,14 @@ class TaggingWorker(
                 ) ?: continue
                 val now = System.currentTimeMillis()
                 try {
-                    val labels = classifier.classifyLabels(bitmap)
+                    val labelScores = classifier.classifyLabelsWithScores(bitmap)
+                    val labels = labelScores.map { it.label }
+                    if (labels.any { it.equals(PERSON_TAG, true) || it.equals(FOOD_LABEL, true) }) {
+                        MyLog.i(
+                            TAG,
+                            "Labeling mediaId=${item.id} path=${item.path} labels=${formatLabelScores(labelScores)}"
+                        )
+                    }
                     mediaRepository.insertTags(item.id, labels)
                     mediaRepository.upsertMediaTagAnalysis(
                         MediaTagAnalysis(
@@ -143,9 +151,36 @@ class TaggingWorker(
                 val faces = detectFaces(faceDetector, bitmap)
                 val now = System.currentTimeMillis()
                 val embeddings = mutableListOf<FaceEmbedding>()
-                if (faces.isNotEmpty()) {
+                if (faces.isEmpty()) {
+                    MyLog.i(
+                        TAG,
+                        "No faces detected mediaId=${item.id} path=${item.path} size=${bitmap.width}x${bitmap.height}"
+                    )
+                }
+                val filteredFaces = if (faces.isNotEmpty()) {
+                    MyLog.i(
+                        TAG,
+                        "Faces detected mediaId=${item.id} path=${item.path} count=${faces.size} size=${bitmap.width}x${bitmap.height}"
+                    )
+                    logFaceDetails(item.id, faces, bitmap.width, bitmap.height)
+                    val accepted = faces.filter {
+                        faceAreaRatio(it.boundingBox, bitmap.width, bitmap.height) >= MIN_FACE_AREA_RATIO
+                    }
+                    val dropped = faces.size - accepted.size
+                    if (dropped > 0) {
+                        MyLog.i(
+                            TAG,
+                            "Faces filtered by size mediaId=${item.id} path=${item.path} kept=${accepted.size} dropped=$dropped minRatio=${formatRatio(MIN_FACE_AREA_RATIO)}"
+                        )
+                    }
+                    accepted
+                } else {
+                    emptyList()
+                }
+                if (filteredFaces.isNotEmpty()) {
+                    MyLog.i(TAG, "Person tag added by face detection mediaId=${item.id} path=${item.path}")
                     mediaRepository.insertTags(item.id, listOf(PERSON_TAG))
-                    for (face in faces) {
+                    for (face in filteredFaces) {
                         val cropped = cropFace(bitmap, face.boundingBox) ?: continue
                         val vector = try {
                             faceEmbeddingHelper.embed(cropped)
@@ -177,7 +212,7 @@ class TaggingWorker(
                 personRepository.upsertMediaFaceAnalysis(
                     MediaFaceAnalysis(
                         mediaId = item.id,
-                        hasFace = faces.isNotEmpty(),
+                        hasFace = filteredFaces.isNotEmpty(),
                         processedAt = now
                     )
                 )
@@ -258,6 +293,40 @@ class TaggingWorker(
         val height = bottom - top
         if (width <= 0 || height <= 0) return null
         return Bitmap.createBitmap(bitmap, left, top, width, height)
+    }
+
+    private fun logFaceDetails(
+        mediaId: Long,
+        faces: List<Face>,
+        imageWidth: Int,
+        imageHeight: Int
+    ) {
+        faces.forEachIndexed { index, face ->
+            val rect = face.boundingBox
+            val ratio = faceAreaRatio(rect, imageWidth, imageHeight)
+            MyLog.i(
+                TAG,
+                "Face ${index + 1}/${faces.size} mediaId=$mediaId rect=${rect.left},${rect.top},${rect.right},${rect.bottom} ratio=${formatRatio(ratio)}"
+            )
+        }
+    }
+
+    private fun faceAreaRatio(rect: Rect, imageWidth: Int, imageHeight: Int): Float {
+        val imageArea = (imageWidth.toLong() * imageHeight.toLong()).coerceAtLeast(1L)
+        val faceWidth = rect.width().coerceAtLeast(0).toLong()
+        val faceHeight = rect.height().coerceAtLeast(0).toLong()
+        val faceArea = (faceWidth * faceHeight).coerceAtLeast(0L)
+        return faceArea.toFloat() / imageArea.toFloat()
+    }
+
+    private fun formatLabelScores(scores: List<ImageClassifierHelper.LabelScore>): String {
+        return scores.joinToString(separator = ", ") {
+            "${it.label}=${"%.3f".format(Locale.US, it.score)}"
+        }
+    }
+
+    private fun formatRatio(value: Float): String {
+        return "%.4f".format(Locale.US, value)
     }
 
     private fun decodeScaledBitmap(
@@ -344,8 +413,10 @@ class TaggingWorker(
         private const val MAX_EDGE_CLASSIFY = 1024
         private const val MAX_EDGE_FACE = 640
         private const val FACE_MARGIN_RATIO = 0.2f
+        private const val MIN_FACE_AREA_RATIO = 0.01f
         private const val PERSON_MATCH_THRESHOLD = 0.6f
         private const val DEFAULT_PERSON_NAME = "Unknown"
         private const val PERSON_TAG = "Person"
+        private const val FOOD_LABEL = "Food"
     }
 }

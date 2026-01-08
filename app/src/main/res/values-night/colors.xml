@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Semantic Colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="background_toolbar">#1F1F1F</color>
+    <color name="background_bottom_sheet">#1F1F1F</color>
+
+    <!-- Legacy/TF Branding Colors -->
+    <color name="ic_launcher_background">#000000</color>
+    <color name="icActive">#FFFFFFFF</color>
+    <color name="icFocused">#DDFFFFFF</color>
+    <color name="icPressed">#AAFFFFFF</color>
+
+    <!-- Floating Action Bar -->
+    <color name="bg_floating_bar">#1F1F1F</color>
+    <color name="icon_tint_floating_bar">#BBBBBB</color>
+    <color name="icon_tint_selected">#4DA3FF</color>
+    <color name="icon_tint_unselected">#888888</color>
+    <color name="bg_circle_semitransparent">#66000000</color>
+    <color name="icon_on_dark">#FFFFFF</color>
+</resources>

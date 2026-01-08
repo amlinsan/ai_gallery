@@ -17,6 +17,7 @@
     <string name="app_name">ElinkAIGallery</string>
 
     <string name="gallery_permission_hint">需要授权才能访问相册</string>
+    <string name="gallery_permission_toast">请授予相册访问权限</string>
     <string name="gallery_empty_hint">暂无图片</string>
     <string name="gallery_request_permission">授权并进入相册</string>
     <string name="gallery_search_hint">搜索标签，例如 cat / 风景</string>
@@ -25,6 +26,9 @@
     <string name="gallery_tab_folders">文件夹</string>
     <string name="gallery_tab_categories">智能分类</string>
     <string name="gallery_title_album">相册</string>
+    <string name="category_people">人物</string>
+    <string name="category_food">美食</string>
+    <string name="category_nature">风景</string>
     <string name="action_delete">删除</string>
     <string name="delete_confirmation_title">确认删除</string>
     <string name="delete_folder_warning">确定要删除该文件夹下的所有图片吗？此操作无法撤销。</string>

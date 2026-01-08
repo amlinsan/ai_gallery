@@ -34,4 +34,5 @@
     <color name="icon_tint_selected">#007AFF</color>
     <color name="icon_tint_unselected">#555555</color>
     <color name="bg_circle_semitransparent">#40000000</color>
+    <color name="icon_on_dark">#FFFFFF</color>
 </resources>
