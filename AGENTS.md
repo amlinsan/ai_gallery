@@ -1,5 +1,10 @@
 # AGENTS.md - Project Guidelines for ElinkAIGallery
 
+## 0. 使用与变更边界 (Usage & Boundaries)
+- 本文档是 AI AGENTS 的强约束规范；如与其他文档冲突，以本文件为准并主动确认。
+- 默认进行**最小必要改动**，避免破坏性修改（大规模删除/迁移/重命名/重构/架构调整）。
+- 如确需结构性改动或重构，必须先说明影响范围并获得明确指示后再执行。
+
 ## 1. 项目概述 (Project Overview)
 **项目名称:** ElinkAIGallery
 **包名:** `com.elink.aigallery`
