@@ -64,8 +64,8 @@ class MediaRepository(context: Context) {
         }
     }
 
-    fun searchImages(query: String): Flow<List<MediaItem>> {
-        return mediaDao.searchImages(query)
+    fun searchImages(query: String, mappedQuery: String): Flow<List<MediaItem>> {
+        return mediaDao.searchImages(query, mappedQuery)
     }
 
     fun observeImagesByLabel(label: String): Flow<List<MediaItem>> {

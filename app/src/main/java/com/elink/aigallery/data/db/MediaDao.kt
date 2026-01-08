@@ -18,12 +18,15 @@ interface MediaDao {
     @Query(
         """
         SELECT DISTINCT m.* FROM media_items AS m
-        INNER JOIN image_tags AS t ON m.id = t.mediaId
-        WHERE t.label LIKE '%' || :query || '%'
+        LEFT JOIN image_tags AS t ON m.id = t.mediaId
+        WHERE t.label LIKE '%' || :query || '%' 
+           OR t.label LIKE '%' || :mappedQuery || '%'
+           OR m.path LIKE '%' || :query || '%'
+           OR m.folderName LIKE '%' || :query || '%'
         ORDER BY m.dateTaken DESC
         """
     )
-    fun searchImages(query: String): Flow<List<MediaItem>>
+    fun searchImages(query: String, mappedQuery: String): Flow<List<MediaItem>>
 
     @Transaction
     @Query(

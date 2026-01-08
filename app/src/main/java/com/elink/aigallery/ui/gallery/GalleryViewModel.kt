@@ -33,9 +33,29 @@ class GalleryViewModel(
             .map { it.trim() }
             .distinctUntilChanged()
             .flatMapLatest { query ->
-                if (query.isEmpty()) flowOf(emptyList()) else repository.searchImages(query)
+                if (query.isEmpty()) {
+                    flowOf(emptyList())
+                } else {
+                    val mappedQuery = mapChineseToEnglish(query)
+                    repository.searchImages(query, mappedQuery)
+                }
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
+    private fun mapChineseToEnglish(query: String): String {
+        return when (query) {
+            "人物" -> "person"
+            "人" -> "person"
+            "猫" -> "cat"
+            "狗" -> "dog"
+            "美食", "食物", "吃" -> "food"
+            "风景", "自然" -> "nature"
+            "天空" -> "sky"
+            "花" -> "flower"
+            "车", "汽车" -> "car"
+            else -> query
+        }
+    }
 
     private val personFlow = repository.observeImagesByLabel("Person")
     private val foodFlow = repository.observeImagesByLabel("Food")

@@ -55,7 +55,7 @@ class FaceEmbeddingHelper private constructor(context: Context) {
 
     companion object {
         private const val MODEL_FILE = "face_embedding.tflite"
-        private const val INPUT_SIZE = 112
+        private const val INPUT_SIZE = 160
         private const val INPUT_CHANNELS = 3
         private const val EMBEDDING_DIM = 128
         private const val IMAGE_MEAN = 127.5f
