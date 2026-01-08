@@ -43,12 +43,18 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/content_list"
+            android:id="@+id/search_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="@dimen/gallery_page_padding_horizontal"
-            android:clipToPadding="false" />
+            android:clipToPadding="false"
+            android:visibility="gone"/>
 
         <ProgressBar
             android:id="@+id/loading"

@@ -19,10 +19,12 @@
     *   内边距：水平方向统一使用 `@dimen/gallery_page_padding_horizontal` (16dp)。
 *   **标签栏 (TabLayout)**：
     *   显示“文件夹” (Folders) 和“智能分类” (Smart Categories) 两个标签。
-    *   字体样式：`GalleryTabTextAppearance` (16sp, Bold)。
-*   **内容区**：
-    *   包含 `RecyclerView` 用于展示列表，以及 `ProgressBar` (加载中) 和 `EmptyState` (空状态)。
-    *   空状态包含提示文字 (`GalleryEmptyMessageStyle`) 和授权按钮。
+    *   字体样式：`GalleryTabTextAppearance` (24sp, Bold)。
+*   **内容区 (ViewPager2)**：
+    *   承载“文件夹”和“智能分类”两个 `GalleryTabFragment`。
+    *   支持左右滑动切换。
+*   **搜索结果层**：
+    *   当进行搜索时，显示覆盖在 ViewPager 之上的 `RecyclerView` (`search_list`)，展示搜索结果。
 
 ### 2.2 列表项 (List Items)
 *   **文件夹项 (`item_folder.xml`) / 分类项 (`item_category.xml`)**：
@@ -36,6 +38,17 @@
     *   网格布局中的单个图片单元。
     *   **高度**：固定为 `@dimen/gallery_media_item_height` (120dp)，`scaleType="centerCrop"`。
 
+### 2.3 图片网格 (MediaGridFragment)
+*   **功能**：展示选定文件夹或分类中的所有图片。
+*   **布局**：3 列网格 (`GridLayoutManager`)。
+*   **交互**：点击图片进入全屏浏览页面 (`PhotoFragment`)。
+
+### 2.4 全屏浏览 (PhotoFragment)
+*   **功能**：展示单张高清大图。
+*   **控件**：使用自定义 `ZoomImageView`。
+*   **交互**：支持双指缩放 (Pinch-to-Zoom)、拖拽查看 (Pan) 和双击放大。
+*   **背景**：纯黑色 (`@color/black`)。
+
 ## 3. 资源规范 (Resource Standards)
 
 ### 3.1 颜色 (Colors)
@@ -47,6 +60,7 @@
 | `background_toolbar` | `#EEEEEE` | 工具栏/头部背景 |
 | `background_bottom_sheet` | `#EEEEEE` | 底部弹窗背景 |
 | `ic_launcher_background` | `#FFFFFF` | 图标背景 |
+| `black` | `#000000` | 纯黑背景（用于 PhotoViewer） |
 
 ### 3.2 字体样式 (Styles)
 统一在 `styles.xml` 中定义，禁止在 layout 中直接写 `textSize` 或 `textStyle`。
@@ -91,12 +105,22 @@
 *   **权限处理**：
     *   未授权时显示空状态页面，提供明确的“授权并进入相册”按钮。
     *   授权后自动加载数据。
-*   **加载反馈**：
-    *   数据扫描过程中显示居中的 `ProgressBar`。
+*   **手势导航**：
+    *   主界面支持左右滑动切换“文件夹”和“智能分类”标签页。
+*   **浏览流**：
+    *   点击列表项 -> 进入图片网格 -> 点击缩略图 -> 全屏预览。
+    *   搜索结果直接展示，点击进入全屏预览。
+*   **图片缩放**：
+    *   全屏浏览模式下支持手势缩放和平移查看细节。
 
 ## 5. 修改记录
 
-*   **2026-01-08**:
+*   **2026-01-08 (Update 2)**:
+    *   实现左右滑动切换 Tab (`ViewPager2`)。
+    *   添加二级网格页面 (`MediaGridFragment`) 和图片全屏浏览页面 (`PhotoFragment`)。
+    *   实现图片缩放功能 (`ZoomImageView`)。
+    *   修复 ViewModel 共享和资源引用问题。
+*   **2026-01-08 (Update 1)**:
     *   移除 TensorFlow 标题栏，改为自定义 Header。
     *   调整搜索图标至 Header 右侧。
     *   Tab 名称由“相册”改为“文件夹”。

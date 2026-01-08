@@ -18,6 +18,7 @@
 <resources>
     <!-- Semantic Colors -->
     <color name="text_primary">#000000</color>
+    <color name="black">#000000</color>
     <color name="background_toolbar">#EEEEEE</color>
     <color name="background_bottom_sheet">#EEEEEE</color>
     

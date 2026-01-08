@@ -7,6 +7,31 @@
     <fragment
         android:id="@+id/gallery_fragment"
         android:name="com.elink.aigallery.fragments.GalleryFragment"
-        android:label="GalleryFragment" />
+        android:label="GalleryFragment">
+        <action
+            android:id="@+id/action_gallery_to_grid"
+            app:destination="@id/media_grid_fragment" />
+        <action
+            android:id="@+id/action_gallery_to_photo"
+            app:destination="@id/photo_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/media_grid_fragment"
+        android:name="com.elink.aigallery.fragments.MediaGridFragment"
+        android:label="MediaGridFragment">
+        <action
+            android:id="@+id/action_grid_to_photo"
+            app:destination="@id/photo_fragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/photo_fragment"
+        android:name="com.elink.aigallery.fragments.PhotoFragment"
+        android:label="PhotoFragment">
+        <argument
+            android:name="imagePath"
+            app:argType="string" />
+    </fragment>
 
 </navigation>

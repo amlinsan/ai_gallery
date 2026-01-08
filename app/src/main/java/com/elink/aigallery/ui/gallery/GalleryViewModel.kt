@@ -55,6 +55,22 @@ class GalleryViewModel(
             )
         }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
+    private val _selectedAlbumItems = MutableStateFlow<List<MediaItem>>(emptyList())
+    val selectedAlbumItems: StateFlow<List<MediaItem>> = _selectedAlbumItems
+
+    private val _selectedAlbumTitle = MutableStateFlow("")
+    val selectedAlbumTitle: StateFlow<String> = _selectedAlbumTitle
+
+    fun selectFolder(folder: FolderWithImages) {
+        _selectedAlbumTitle.value = folder.folderName
+        _selectedAlbumItems.value = folder.items
+    }
+
+    fun selectCategory(category: CategoryAlbum) {
+        _selectedAlbumTitle.value = category.title
+        _selectedAlbumItems.value = category.items
+    }
+
     fun scanLocalMedia() {
         viewModelScope.launch(Dispatchers.IO) {
             repository.syncImages()
