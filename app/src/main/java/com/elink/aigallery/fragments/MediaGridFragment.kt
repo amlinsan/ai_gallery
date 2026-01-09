@@ -36,6 +36,10 @@ class MediaGridFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         lateinit var adapter: MediaItemAdapter
         adapter = MediaItemAdapter(
             onClick = { item ->
@@ -56,8 +60,15 @@ class MediaGridFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.selectedAlbumItems.collect { items ->
-                    adapter.submitList(items)
+                launch {
+                    viewModel.selectedAlbumItems.collect { items ->
+                        adapter.submitList(items)
+                    }
+                }
+                launch {
+                    viewModel.selectedAlbumTitle.collect { title ->
+                        binding.headerTitle.text = title
+                    }
                 }
             }
         }

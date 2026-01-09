@@ -29,7 +29,8 @@ import kotlinx.coroutines.withContext
 class GalleryViewModel(
     private val repository: MediaRepository,
     private val personRepository: PersonRepository,
-    private val categoryTitles: CategoryTitles
+    private val categoryTitles: CategoryTitles,
+    private val personFallbackFormat: String
 ) : ViewModel() {
 
     val folders: StateFlow<List<FolderWithImages>> = repository.observeFolders()
@@ -123,7 +124,12 @@ class GalleryViewModel(
     }
 
     fun selectPerson(person: PersonAlbum) {
-        _selectedAlbumTitle.value = person.name
+        val displayName = if (person.name.equals("Unknown", ignoreCase = true) || person.name.isBlank()) {
+            String.format(personFallbackFormat, person.personId)
+        } else {
+            person.name
+        }
+        _selectedAlbumTitle.value = displayName
         viewModelScope.launch(Dispatchers.IO) {
             val items = personRepository.getMediaByPerson(person.personId)
             withContext(Dispatchers.Main) {
@@ -203,10 +209,11 @@ class GalleryViewModel(
             food = appContext.getString(R.string.category_food),
             nature = appContext.getString(R.string.category_nature)
         )
+        private val personFallbackFormat = appContext.getString(R.string.person_fallback_name)
 
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return GalleryViewModel(repository, personRepository, categoryTitles) as T
+            return GalleryViewModel(repository, personRepository, categoryTitles, personFallbackFormat) as T
         }
     }
 }

@@ -25,7 +25,7 @@ class PersonAdapter(
     }
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
-        holder.bind(getItem(position), position)
+        holder.bind(getItem(position))
     }
 
     class PersonViewHolder(
@@ -33,7 +33,7 @@ class PersonAdapter(
         private val onClick: (PersonAlbum) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(person: PersonAlbum, position: Int) {
+        fun bind(person: PersonAlbum) {
             val coverPath = person.coverPath
             if (coverPath != null) {
                 binding.personCover.load(File(coverPath)) {
@@ -44,7 +44,7 @@ class PersonAdapter(
             }
 
             val name = if (person.name.isBlank() || person.name == UNKNOWN_NAME) {
-                binding.root.context.getString(R.string.person_fallback_name, position + 1)
+                binding.root.context.getString(R.string.person_fallback_name, person.personId)
             } else {
                 person.name
             }

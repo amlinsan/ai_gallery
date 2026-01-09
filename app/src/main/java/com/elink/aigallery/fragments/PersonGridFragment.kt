@@ -36,6 +36,10 @@ class PersonGridFragment : Fragment() {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         val adapter = PersonAdapter { person ->
             viewModel.selectPerson(person)
             findNavController().navigate(R.id.action_person_grid_to_grid)
