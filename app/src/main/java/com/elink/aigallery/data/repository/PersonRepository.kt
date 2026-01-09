@@ -25,6 +25,8 @@ class PersonRepository(context: Context) {
 
     suspend fun updatePerson(person: PersonEntity) = personDao.updatePerson(person)
 
+    suspend fun updatePersonName(id: Long, name: String) = personDao.updateName(id, name)
+
     suspend fun insertFaceEmbeddings(embeddings: List<FaceEmbedding>) {
         if (embeddings.isNotEmpty()) {
             personDao.insertFaceEmbeddings(embeddings)

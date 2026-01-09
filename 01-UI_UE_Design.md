@@ -36,7 +36,7 @@
 ## 2. 资源规范 (Resource Standards)
 
 ### 2.1 资源硬规则 (Must)
-- **字符串**: 统一放在 `strings.xml`，并提供 `values-zh`/`values-en`；动态文本用占位符（`%1$s/%1$d`），复数用 `plurals.xml`。
+- **字符串**: 统一放在 `strings.xml`，并提供 `values`/`values-zh-rCN`；动态文本用占位符（`%1$s/%1$d`），复数用 `plurals.xml`。
 - **样式**: 布局仅引用 `style`/`textAppearance`；禁止在布局中直接写 `textSize`，可复用的文字样式必须抽成 `TextAppearance.*`。
 - **尺寸**: 组件宽高/边距/内边距必须引用 `dimens.xml`，禁止布局中直接写数字。
 - **颜色**: 颜色语义化命名并放入 `colors.xml`，必须在 `values-night` 提供对应值，优先使用主题属性。

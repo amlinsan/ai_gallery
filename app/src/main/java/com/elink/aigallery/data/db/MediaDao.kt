@@ -19,10 +19,13 @@ interface MediaDao {
         """
         SELECT DISTINCT m.* FROM media_items AS m
         LEFT JOIN image_tags AS t ON m.id = t.mediaId
+        LEFT JOIN face_embeddings AS fe ON m.id = fe.mediaId
+        LEFT JOIN persons AS p ON fe.personId = p.id
         WHERE t.label LIKE '%' || :query || '%' 
            OR t.label LIKE '%' || :mappedQuery || '%'
            OR m.path LIKE '%' || :query || '%'
            OR m.folderName LIKE '%' || :query || '%'
+           OR p.name LIKE '%' || :query || '%'
         ORDER BY m.dateTaken DESC
         """
     )

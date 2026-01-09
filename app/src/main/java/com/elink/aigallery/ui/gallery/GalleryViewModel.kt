@@ -138,6 +138,12 @@ class GalleryViewModel(
         }
     }
 
+    fun renamePerson(personId: Long, newName: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            personRepository.updatePersonName(personId, newName)
+        }
+    }
+
     private val _deletePendingIntent = MutableStateFlow<android.app.PendingIntent?>(null)
     val deletePendingIntent: StateFlow<android.app.PendingIntent?> = _deletePendingIntent
 

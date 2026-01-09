@@ -40,10 +40,15 @@ class PersonGridFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        val adapter = PersonAdapter { person ->
-            viewModel.selectPerson(person)
-            findNavController().navigate(R.id.action_person_grid_to_grid)
-        }
+        val adapter = PersonAdapter(
+            onClick = { person ->
+                viewModel.selectPerson(person)
+                findNavController().navigate(R.id.action_person_grid_to_grid)
+            },
+            onEditClick = { person ->
+                showRenameDialog(person)
+            }
+        )
         binding.personList.layoutManager = LinearLayoutManager(requireContext())
         binding.personList.adapter = adapter
 
@@ -56,6 +61,26 @@ class PersonGridFragment : Fragment() {
                 }
             }
         }
+    }
+
+    private fun showRenameDialog(person: com.elink.aigallery.data.model.PersonAlbum) {
+        val view = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_rename_input, null)
+        val input = view.findViewById<android.widget.EditText>(R.id.rename_input)
+        
+        val currentName = if (person.name == "Unknown") "" else person.name
+        input.setText(currentName)
+        
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle(R.string.dialog_rename_title)
+            .setView(view)
+            .setPositiveButton(R.string.action_ok) { _, _ ->
+                val newName = input.text.toString().trim()
+                if (newName.isNotEmpty()) {
+                    viewModel.renamePerson(person.personId, newName)
+                }
+            }
+            .setNegativeButton(R.string.action_cancel, null)
+            .show()
     }
 
     override fun onDestroyView() {

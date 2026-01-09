@@ -12,7 +12,8 @@ import com.elink.aigallery.databinding.ItemPersonBinding
 import java.io.File
 
 class PersonAdapter(
-    private val onClick: (PersonAlbum) -> Unit
+    private val onClick: (PersonAlbum) -> Unit,
+    private val onEditClick: (PersonAlbum) -> Unit
 ) : ListAdapter<PersonAlbum, PersonAdapter.PersonViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
@@ -21,7 +22,7 @@ class PersonAdapter(
             parent,
             false
         )
-        return PersonViewHolder(binding, onClick)
+        return PersonViewHolder(binding, onClick, onEditClick)
     }
 
     override fun onBindViewHolder(holder: PersonViewHolder, position: Int) {
@@ -30,7 +31,8 @@ class PersonAdapter(
 
     class PersonViewHolder(
         private val binding: ItemPersonBinding,
-        private val onClick: (PersonAlbum) -> Unit
+        private val onClick: (PersonAlbum) -> Unit,
+        private val onEditClick: (PersonAlbum) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(person: PersonAlbum) {
@@ -51,6 +53,9 @@ class PersonAdapter(
             binding.personName.text = name
             binding.personCount.text = person.mediaCount.toString()
             binding.root.setOnClickListener { onClick(person) }
+            binding.nameContainer.setOnClickListener {
+                onEditClick(person)
+            }
         }
     }
 

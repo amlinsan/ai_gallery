@@ -54,6 +54,9 @@ interface PersonDao {
     @Update
     suspend fun updatePerson(person: PersonEntity)
 
+    @Query("UPDATE persons SET name = :newName WHERE id = :personId")
+    suspend fun updateName(personId: Long, newName: String)
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFaceEmbeddings(embeddings: List<FaceEmbedding>)
 

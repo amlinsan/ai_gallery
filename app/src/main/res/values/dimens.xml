@@ -57,4 +57,12 @@
     <dimen name="header_icon_size">48dp</dimen>
     <dimen name="header_padding_start">8dp</dimen>
     <dimen name="header_title_margin_start">8dp</dimen>
+
+    <!-- Generic Spacing -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_s">8dp</dimen>
+
+    <!-- Person Item -->
+    <dimen name="person_item_name_max_width">240dp</dimen>
+    <dimen name="icon_size_small">24dp</dimen>
 </resources>
