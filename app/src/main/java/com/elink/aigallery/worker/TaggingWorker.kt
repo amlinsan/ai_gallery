@@ -50,6 +50,7 @@ class TaggingWorker(
         val mediaRepository = MediaRepository(applicationContext)
         val personRepository = PersonRepository(applicationContext)
         val classifier = ImageClassifierHelper.getSharedInstance(applicationContext)
+        classifier.updateOptions(TAG_CLASSIFY_MIN_SCORE, TAG_CLASSIFY_MAX_RESULTS)
         val faceDetector = FaceDetection.getClient(faceOptions())
         val faceEmbeddingHelper = try {
             FaceEmbeddingHelper.getInstance(applicationContext)
@@ -94,8 +95,8 @@ class TaggingWorker(
                 val now = System.currentTimeMillis()
                 try {
                     val labelScores = classifier.classifyLabelsWithScores(bitmap)
-                    val labels = labelScores.map { it.label }
-                    if (labels.any { it.equals(PERSON_TAG, true) || it.equals(FOOD_LABEL, true) }) {
+                    val labels = normalizeTags(labelScores)
+                    if (labels.isNotEmpty()) {
                         MyLog.i(
                             TAG,
                             "Labeling mediaId=${item.id} path=${item.path} labels=${formatLabelScores(labelScores)}"
@@ -339,6 +340,38 @@ class TaggingWorker(
         }
     }
 
+    private fun normalizeTags(
+        scores: List<ImageClassifierHelper.LabelScore>
+    ): List<String> {
+        if (scores.isEmpty()) return emptyList()
+        val normalized = mutableMapOf<String, Float>()
+        for (score in scores) {
+            val matched = mapLabel(score.label, score.score) ?: continue
+            val existing = normalized[matched.tag]
+            if (existing == null || matched.score > existing) {
+                normalized[matched.tag] = matched.score
+            }
+        }
+        return normalized.entries
+            .sortedByDescending { it.value }
+            .map { it.key }
+    }
+
+    private fun mapLabel(label: String, score: Float): NormalizedTag? {
+        val key = label.trim().lowercase(Locale.US)
+        return when {
+            PERSON_LABELS.contains(key) && score >= PERSON_SCORE_THRESHOLD ->
+                NormalizedTag(PERSON_TAG, score)
+            FOOD_LABELS.contains(key) && score >= FOOD_SCORE_THRESHOLD ->
+                NormalizedTag(FOOD_TAG, score)
+            NATURE_LABELS.contains(key) && score >= NATURE_SCORE_THRESHOLD ->
+                NormalizedTag(NATURE_TAG, score)
+            SKY_LABELS.contains(key) && score >= SKY_SCORE_THRESHOLD ->
+                NormalizedTag(SKY_TAG, score)
+            else -> null
+        }
+    }
+
     private fun formatRatio(value: Float): String {
         return "%.4f".format(Locale.US, value)
     }
@@ -421,9 +454,16 @@ class TaggingWorker(
         var embedding: FloatArray
     )
 
+    private data class NormalizedTag(
+        val tag: String,
+        val score: Float
+    )
+
     companion object {
         private const val TAG = "TaggingWorker"
         private const val BATCH_LIMIT = 50
+        private const val TAG_CLASSIFY_MAX_RESULTS = 16
+        private const val TAG_CLASSIFY_MIN_SCORE = 0.1f
         private const val MAX_EDGE_CLASSIFY = 1024
         private const val MAX_EDGE_FACE = 800
         private const val FACE_MARGIN_RATIO = 0.2f
@@ -432,8 +472,105 @@ class TaggingWorker(
         private const val MAX_FACE_YAW = 20f
         private const val MAX_FACE_ROLL = 20f
         private const val PERSON_MATCH_THRESHOLD = 0.7f
+        private const val PERSON_SCORE_THRESHOLD = 0.6f
+        private const val FOOD_SCORE_THRESHOLD = 0.2f
+        private const val NATURE_SCORE_THRESHOLD = 0.2f
+        private const val SKY_SCORE_THRESHOLD = 0.2f
         private const val DEFAULT_PERSON_NAME = "Unknown"
         private const val PERSON_TAG = "Person"
-        private const val FOOD_LABEL = "Food"
+        private const val FOOD_TAG = "Food"
+        private const val NATURE_TAG = "Nature"
+        private const val SKY_TAG = "Sky"
+
+        private val PERSON_LABELS = setOf(
+            "person",
+            "people",
+            "human"
+        )
+        private val FOOD_LABELS = setOf(
+            "bagel",
+            "bell pepper",
+            "beer bottle",
+            "broccoli",
+            "burrito",
+            "butternut squash",
+            "cardoon",
+            "cauliflower",
+            "cheeseburger",
+            "chocolate sauce",
+            "coffee mug",
+            "consomme",
+            "cucumber",
+            "custard apple",
+            "dining table",
+            "dough",
+            "eggnog",
+            "espresso",
+            "french loaf",
+            "guacamole",
+            "head cabbage",
+            "hot dog",
+            "hotdog",
+            "hot pot",
+            "ice cream",
+            "ice lolly",
+            "jackfruit",
+            "lemon",
+            "mashed potato",
+            "meat loaf",
+            "menu",
+            "mixing bowl",
+            "mushroom",
+            "orange",
+            "pineapple",
+            "pizza",
+            "plate",
+            "potpie",
+            "pretzel",
+            "pomegranate",
+            "red wine",
+            "restaurant",
+            "soup bowl",
+            "strawberry",
+            "teapot",
+            "trifle",
+            "wine bottle",
+            "zucchini",
+            "acorn squash",
+            "artichoke",
+            "banana",
+            "carbonara",
+            "corn",
+            "granny smith",
+            "spaghetti squash"
+        )
+        private val NATURE_LABELS = setOf(
+            "agaric",
+            "bolete",
+            "buckeye",
+            "cliff",
+            "coral fungus",
+            "coral reef",
+            "daisy",
+            "earthstar",
+            "geyser",
+            "gyromitra",
+            "hen-of-the-woods",
+            "lakeside",
+            "promontory",
+            "rapeseed",
+            "sandbar",
+            "seashore",
+            "stinkhorn",
+            "valley",
+            "volcano",
+            "yellow lady's slipper"
+        )
+        private val SKY_LABELS = setOf(
+            "sky",
+            "cloud",
+            "sunset",
+            "sunrise"
+        )
     }
 }

@@ -51,6 +51,23 @@ class ImageClassifierHelper(
         imageClassifier = null
     }
 
+    fun updateOptions(threshold: Float, maxResults: Int) {
+        synchronized(classifierLock) {
+            var updated = false
+            if (this.threshold != threshold) {
+                this.threshold = threshold
+                updated = true
+            }
+            if (this.maxResults != maxResults) {
+                this.maxResults = maxResults
+                updated = true
+            }
+            if (updated) {
+                imageClassifier = null
+            }
+        }
+    }
+
     private fun setupImageClassifier() {
         val optionsBuilder = ImageClassifier.ImageClassifierOptions.builder()
             .setScoreThreshold(threshold)

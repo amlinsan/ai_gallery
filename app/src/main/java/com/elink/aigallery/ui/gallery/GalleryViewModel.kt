@@ -54,14 +54,12 @@ class GalleryViewModel(
 
     private fun mapChineseToEnglish(query: String): String {
         return when (query) {
-            "人物" -> "person"
-            "人" -> "person"
+            "人物", "人", "人像", "肖像" -> "Person"
             "猫" -> "cat"
             "狗" -> "dog"
-            "美食", "食物", "吃" -> "food"
-            "风景", "自然" -> "nature"
-            "天空" -> "sky"
-            "花" -> "flower"
+            "美食", "食物", "吃", "餐饮", "甜品", "料理" -> "Food"
+            "风景", "自然", "山", "海", "森林", "花", "树" -> "Nature"
+            "天空", "云", "日落", "日出", "蓝天" -> "Sky"
             "车", "汽车" -> "car"
             else -> query
         }
