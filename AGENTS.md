@@ -8,6 +8,7 @@
 ## 1. 项目概述 (Project Overview)
 **项目名称:** ElinkAIGallery
 **核心目标:** 一个基于 Android 平台的**本地化 (Local-first)** 智能相册应用。
+**适配范围:** Android 13/14/15（媒体权限与删除流程仅需覆盖此范围，删除使用 `createDeleteRequest` / IntentSender）。
 **当前已实现**:
 - **多维浏览**: “文件夹 / 智能分类”双入口；智能分类按标签聚合为「人物 / 美食 / 风景」列表。
 - **图片查看**: 支持全屏滑动浏览 + 手势缩放（`ZoomImageView`）。
@@ -15,8 +16,7 @@
 - **安全删除**: 支持单图/批量/分类长按删除；系统级确认后以 Room 刷新 UI。
 - **隐私优先**: 标签识别、人脸检测、Embedding 全部端侧完成。
 - **人物聚类与目录**: 已支持人物聚类，并提供人物目录页与人物相册浏览。
-**当前限制 / 待完善**:
-- **美食/风景**: 识别效果仍不足/命中率偏低，需要下一步完善与校准。
+- **美食/风景**: 已打通识别流程，后续仅需按体验反馈做细节优化与阈值校准。
 
 ## 2. Agent 开发分工指引
 - **Data Agent (数据侧)**:
@@ -31,7 +31,7 @@
   - 必须端侧推理，禁止引入网络请求。
 - **UI Agent (视图侧)**:
   - 负责 XML 布局实现、ViewBinding 绑定、多语言适配及 ViewModel 状态驱动。
-  - 现有导航结构为单 Activity + `GalleryFragment -> MediaGridFragment -> PhotoFragment`；若新增“人物二级目录/人物相册”页面，需先说明导航变更与影响范围并获得确认。
+  - 现有导航结构为单 Activity + `GalleryFragment -> MediaGridFragment -> PhotoFragment`，并包含人物目录 `PersonGridFragment -> MediaGridFragment`；若新增其它导航页面，需先说明变更与影响范围并获得确认。
   - 删除交互需显式确认（系统弹窗），批量/智能分类删除需二次提示。
 
 ## 3. 技术栈约束 (Tech Stack Constraints)
@@ -43,7 +43,7 @@
 - **日志规范**: 统一使用 `utils/MyLog`，Tag 固定为 `elink_aig`。
 
 ## 4. 编码规范 (Coding Standards)
-- **权限处理**: 适配 Android 13/14/15 媒体权限（READ_MEDIA_IMAGES 等）。删除操作需适配 Android 10+ 的 `RecoverableSecurityException` 及 Android 11+ 的 `createDeleteRequest`。
+- **权限处理**: 媒体权限按上文适配范围处理（READ_MEDIA_IMAGES 等）。
 - **资源规范**: 严禁硬编码颜色、尺寸、字符串。所有文本需通过 `strings.xml` 支持中英文；详细规则见 `UI_UE_Design.md`。
 - **删除规范**: 禁止静默删除，必须经过系统级确认流程。
 - **错误处理**: I/O 与 AI 推理必须在 `Dispatchers.IO` 执行。

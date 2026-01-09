@@ -16,7 +16,7 @@
 
 ### 1.2 智能分类与人脸聚类 (AI Features)
 - **分类导航流**:
-  - 当前“人物/美食/风景”均直接跳转至 **MediaGridFragment**（图片网格）。
+  - “人物”进入人物目录 **PersonGridFragment**，再进入人物相册 **MediaGridFragment**；“美食/风景”直接进入 **MediaGridFragment**（图片网格）。
   - 若后续新增“人物二级目录/人物相册”，需先确认导航变更，再新增对应 Fragment。
 - **人物聚类现状**:
   - 当前仅按 `Person` 标签聚合，不做不同人物分组。
@@ -38,7 +38,7 @@
 ### 2.1 资源硬规则 (Must)
 - **字符串**: 统一放在 `strings.xml`，并提供 `values`/`values-zh-rCN`；动态文本用占位符（`%1$s/%1$d`），复数用 `plurals.xml`。
 - **样式**: 布局仅引用 `style`/`textAppearance`；禁止在布局中直接写 `textSize`，可复用的文字样式必须抽成 `TextAppearance.*`。
-- **尺寸**: 组件宽高/边距/内边距必须引用 `dimens.xml`，禁止布局中直接写数字。
+- **尺寸**: 组件宽高/边距/内边距必须引用 `dimens.xml`，禁止布局中直接写数字；需要时允许使用 `0dp`。
 - **颜色**: 颜色语义化命名并放入 `colors.xml`，必须在 `values-night` 提供对应值，优先使用主题属性。
 - **命名示例**: `text_primary`, `bg_surface`, `spacing_m`, `text_title`.
 

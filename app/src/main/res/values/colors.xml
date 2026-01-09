@@ -23,7 +23,8 @@
     <color name="background_bottom_sheet">#EEEEEE</color>
     
     <!-- Legacy/TF Branding Colors (keep for now if needed, or refactor) -->
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="ic_launcher_background">#007AFF</color>
+    <color name="ic_launcher_foreground">#FFFFFF</color>
     <color name="icActive">#FFFFFFFF</color>
     <color name="icFocused">#DDFFFFFF</color>
     <color name="icPressed">#AAFFFFFF</color>

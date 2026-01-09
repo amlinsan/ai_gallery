@@ -4,19 +4,14 @@
     android:viewportWidth="108"
     android:viewportHeight="108">
     
-    <!-- A stylized photo icon in the center -->
-    <path
-        android:fillColor="#007AFF"
-        android:pathData="M30,30 H78 C81.3,30 84,32.7 84,36 V72 C84,75.3 81.3,78 78,78 H30 C26.7,78 24,75.3 24,72 V36 C24,32.7 26.7,30 30,30 Z" />
-    
     <!-- Mountains in the photo -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="@color/ic_launcher_foreground"
         android:pathData="M30,72 L45,52 L55,65 L65,50 L78,72 Z" />
     
     <!-- Sun in the photo -->
     <path
-        android:fillColor="#FFFFFF"
+        android:fillColor="@color/ic_launcher_foreground"
         android:pathData="M65,42 A5,5 0 1,1 65,32 A5,5 0 1,1 65,42" />
 
 </vector>
