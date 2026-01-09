@@ -12,6 +12,7 @@ import com.elink.aigallery.data.model.CategoryType
 import com.elink.aigallery.data.model.PersonAlbum
 import com.elink.aigallery.data.repository.MediaRepository
 import com.elink.aigallery.data.repository.PersonRepository
+import com.elink.aigallery.data.repository.ScanTrigger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -188,9 +189,9 @@ class GalleryViewModel(
         _deletePendingIntent.value = null
     }
 
-    fun scanLocalMedia() {
+    fun scanLocalMedia(trigger: ScanTrigger) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.syncImages()
+            repository.scanMedia(trigger)
         }
     }
 

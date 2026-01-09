@@ -3,7 +3,12 @@ package com.elink.aigallery.fragments
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.database.ContentObserver
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +24,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.elink.aigallery.R
+import com.elink.aigallery.data.repository.ScanTrigger
 import com.elink.aigallery.databinding.FragmentGalleryBinding
 import com.elink.aigallery.ui.gallery.GalleryPagerAdapter
 import com.elink.aigallery.ui.gallery.GalleryViewModel
@@ -26,6 +32,8 @@ import com.elink.aigallery.ui.gallery.MediaItemAdapter
 import com.elink.aigallery.worker.TaggingWorkScheduler
 import androidx.appcompat.app.AlertDialog
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class GalleryFragment : Fragment() {
@@ -33,6 +41,8 @@ class GalleryFragment : Fragment() {
     private var _binding: FragmentGalleryBinding? = null
     private val binding get() = _binding!!
     private var hasLoadedOnce = false
+    private var mediaObserver: ContentObserver? = null
+    private var pendingScanJob: Job? = null
 
     private val viewModel: GalleryViewModel by activityViewModels {
         GalleryViewModel.Factory(requireContext())
@@ -41,8 +51,9 @@ class GalleryFragment : Fragment() {
     private val permissionLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { _ ->
             if (hasMediaPermissions()) {
-                startScan()
+                startScan(ScanTrigger.FOREGROUND)
                 TaggingWorkScheduler.schedule(requireContext().applicationContext)
+                registerMediaObserver()
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -140,11 +151,29 @@ class GalleryFragment : Fragment() {
         }
 
         if (hasMediaPermissions()) {
-            startScan()
+            startScan(ScanTrigger.FOREGROUND)
             TaggingWorkScheduler.schedule(requireContext().applicationContext)
+            registerMediaObserver()
         } else {
             updateContentState(hasData = false)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (hasMediaPermissions()) {
+            registerMediaObserver()
+            if (hasLoadedOnce) {
+                scheduleScan(ScanTrigger.FOREGROUND)
+            }
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterMediaObserver()
+        pendingScanJob?.cancel()
+        pendingScanJob = null
     }
 
     override fun onDestroyView() {
@@ -152,9 +181,47 @@ class GalleryFragment : Fragment() {
         _binding = null
     }
 
-    private fun startScan() {
-        binding.loading.isVisible = true
-        viewModel.scanLocalMedia()
+    private fun startScan(trigger: ScanTrigger) {
+        if (!hasLoadedOnce) {
+            binding.loading.isVisible = true
+        }
+        viewModel.scanLocalMedia(trigger)
+    }
+
+    private fun scheduleScan(trigger: ScanTrigger) {
+        pendingScanJob?.cancel()
+        pendingScanJob = viewLifecycleOwner.lifecycleScope.launch {
+            delay(300)
+            if (hasMediaPermissions()) {
+                startScan(trigger)
+            }
+        }
+    }
+
+    private fun registerMediaObserver() {
+        if (mediaObserver != null) return
+        val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
+            override fun onChange(selfChange: Boolean) {
+                scheduleScan(ScanTrigger.OBSERVER)
+            }
+
+            override fun onChange(selfChange: Boolean, uri: Uri?) {
+                scheduleScan(ScanTrigger.OBSERVER)
+            }
+        }
+        requireContext().contentResolver.registerContentObserver(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            true,
+            observer
+        )
+        mediaObserver = observer
+    }
+
+    private fun unregisterMediaObserver() {
+        mediaObserver?.let { observer ->
+            requireContext().contentResolver.unregisterContentObserver(observer)
+        }
+        mediaObserver = null
     }
 
     private fun showDeleteConfirmDialog(item: com.elink.aigallery.data.db.MediaItem) {
