@@ -11,17 +11,19 @@ import androidx.sqlite.db.SupportSQLiteDatabase
     entities = [
         MediaItem::class,
         ImageTag::class,
+        MediaTagAnalysis::class,
+        MediaFaceAnalysis::class,
         PersonEntity::class,
         FaceEmbedding::class,
-        MediaFaceAnalysis::class,
-        MediaTagAnalysis::class
+        ImageEmbedding::class
     ],
-    version = 4,
+    version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun mediaDao(): MediaDao
     abstract fun personDao(): PersonDao
+    abstract fun imageEmbeddingDao(): ImageEmbeddingDao
 
     companion object {
         @Volatile

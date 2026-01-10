@@ -26,6 +26,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.Locale
 
 class GalleryViewModel(
     private val repository: MediaRepository,
@@ -49,7 +50,18 @@ class GalleryViewModel(
                     flowOf(emptyList())
                 } else {
                     val mappedQuery = mapChineseToEnglish(query)
-                    repository.searchImages(query, mappedQuery)
+                    // Hybrid Search: Try SQL Tag Search first, then Semantic Search
+                    repository.searchImages(query, mappedQuery).flatMapLatest { sqlResults ->
+                        if (sqlResults.isNotEmpty()) {
+                            flowOf(sqlResults)
+                        } else {
+                            // If SQL returns nothing, try Semantic Search
+                            kotlinx.coroutines.flow.flow {
+                                val semanticResults = repository.semanticSearch(query)
+                                emit(semanticResults)
+                            }
+                        }
+                    }
                 }
             }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
@@ -145,6 +157,31 @@ class GalleryViewModel(
         }
     }
 
+    fun saveBackgroundReplacedImage(
+        bitmap: android.graphics.Bitmap,
+        onResult: (Boolean) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val displayName = String.format(
+                Locale.US,
+                "%s%d.jpg",
+                BG_REPLACE_FILE_PREFIX,
+                System.currentTimeMillis()
+            )
+            val success = repository.saveBitmapToGallery(
+                bitmap,
+                displayName,
+                BG_REPLACE_RELATIVE_PATH
+            )
+            if (success) {
+                repository.scanMedia(ScanTrigger.FOREGROUND)
+            }
+            withContext(Dispatchers.Main) {
+                onResult(success)
+            }
+        }
+    }
+
     private val _deletePendingIntent = MutableStateFlow<android.app.PendingIntent?>(null)
     val deletePendingIntent: StateFlow<android.app.PendingIntent?> = _deletePendingIntent
 
@@ -222,5 +259,10 @@ class GalleryViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return GalleryViewModel(repository, personRepository, categoryTitles, personFallbackFormat) as T
         }
+    }
+
+    companion object {
+        private const val BG_REPLACE_FILE_PREFIX = "Elink_BG_"
+        private const val BG_REPLACE_RELATIVE_PATH = "Pictures/ElinkAIGallery"
     }
 }

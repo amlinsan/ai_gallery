@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="@dimen/bg_replace_sheet_padding">
+
+    <TextView
+        style="@style/GalleryItemTitleStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/bg_replace_title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_pick_bg_image"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/bg_replace_option_image" />
+
+        <Button
+            android:id="@+id/btn_pick_bg_color"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_s"
+            android:layout_weight="1"
+            android:text="@string/bg_replace_option_color" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/bg_color_title"
+        style="@style/GalleryItemCountStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_m"
+        android:text="@string/bg_replace_color_title"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/color_option_row"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_s"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <ImageButton
+            android:id="@+id/color_option_blue"
+            android:layout_width="@dimen/bg_replace_color_size"
+            android:layout_height="@dimen/bg_replace_color_size"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/bg_replace_color_blue"
+            android:contentDescription="@string/bg_replace_color_blue" />
+
+        <ImageButton
+            android:id="@+id/color_option_green"
+            android:layout_width="@dimen/bg_replace_color_size"
+            android:layout_height="@dimen/bg_replace_color_size"
+            android:layout_marginStart="@dimen/spacing_s"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/bg_replace_color_green"
+            android:contentDescription="@string/bg_replace_color_green" />
+
+        <ImageButton
+            android:id="@+id/color_option_orange"
+            android:layout_width="@dimen/bg_replace_color_size"
+            android:layout_height="@dimen/bg_replace_color_size"
+            android:layout_marginStart="@dimen/spacing_s"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/bg_replace_color_orange"
+            android:contentDescription="@string/bg_replace_color_orange" />
+
+        <ImageButton
+            android:id="@+id/color_option_pink"
+            android:layout_width="@dimen/bg_replace_color_size"
+            android:layout_height="@dimen/bg_replace_color_size"
+            android:layout_marginStart="@dimen/spacing_s"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/bg_replace_color_pink"
+            android:contentDescription="@string/bg_replace_color_pink" />
+
+        <ImageButton
+            android:id="@+id/color_option_gray"
+            android:layout_width="@dimen/bg_replace_color_size"
+            android:layout_height="@dimen/bg_replace_color_size"
+            android:layout_marginStart="@dimen/spacing_s"
+            android:background="@drawable/bg_color_circle"
+            android:backgroundTint="@color/bg_replace_color_gray"
+            android:contentDescription="@string/bg_replace_color_gray" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -19,6 +19,7 @@ object TaggingWorkScheduler {
         val workManager = WorkManager.getInstance(context.applicationContext)
         MyLog.i(TAG, "Schedule tagging workers")
 
+        // 1. Tagging (Classification)
         val immediateRequest = OneTimeWorkRequestBuilder<TaggingWorker>()
             .addTag(UNIQUE_STARTUP_WORK)
             .build()
@@ -28,9 +29,21 @@ object TaggingWorkScheduler {
             immediateRequest
         )
 
+        // 2. Embedding (CLIP) - Scheduled immediately too for testing
+        val embeddingRequest = OneTimeWorkRequestBuilder<EmbeddingWorker>()
+            .addTag("embedding_startup")
+            .build()
+        workManager.enqueueUniqueWork(
+            "embedding_startup",
+            ExistingWorkPolicy.REPLACE,
+            embeddingRequest
+        )
+
+        // Periodic (Charging)
         val chargingConstraints = Constraints.Builder()
             .setRequiresCharging(true)
             .build()
+        
         val chargingRequest = PeriodicWorkRequestBuilder<TaggingWorker>(
             12,
             TimeUnit.HOURS
@@ -42,6 +55,19 @@ object TaggingWorkScheduler {
             UNIQUE_CHARGING_WORK,
             ExistingPeriodicWorkPolicy.KEEP,
             chargingRequest
+        )
+
+        val chargingEmbeddingRequest = PeriodicWorkRequestBuilder<EmbeddingWorker>(
+            12,
+            TimeUnit.HOURS
+        )
+            .setConstraints(chargingConstraints)
+            .addTag("embedding_charging")
+            .build()
+        workManager.enqueueUniquePeriodicWork(
+            "embedding_charging",
+            ExistingPeriodicWorkPolicy.KEEP,
+            chargingEmbeddingRequest
         )
     }
 }

@@ -42,17 +42,42 @@ if (!skipModelDownload) {
         overwrite false
     }
 
+    task downloadSelfieSegmenter(type: Download) {
+        src 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/1/selfie_segmenter.tflite'
+        dest project.ext.ASSET_DIR + '/selfie_segmenter.tflite'
+        overwrite false
+    }
+
+    // CLIP Models (Placeholders - Replace SRC with valid URLs if available, or manually place files in assets)
+    // Example: https://github.com/george-chu/CLIP-M/ (Mobile CLIP)
+    task downloadClipImageModel(type: Download) {
+        // Placeholder URL. Please replace with a valid TFLite CLIP Image Encoder URL.
+        src 'https://storage.googleapis.com/download.tensorflow.org/models/tflite/bert_qna/1/mobilebert_float_20191023.tflite' // DUMMY URL
+        dest project.ext.ASSET_DIR + '/clip_image_encoder.tflite'
+        overwrite false
+        onlyIfModified true
+    }
+
+    task downloadClipTextModel(type: Download) {
+        // Placeholder URL. Please replace with a valid TFLite CLIP Text Encoder URL.
+        src 'https://storage.googleapis.com/download.tensorflow.org/models/tflite/bert_qna/1/mobilebert_float_20191023.tflite' // DUMMY URL
+        dest project.ext.ASSET_DIR + '/clip_text_encoder.tflite'
+        overwrite false
+        onlyIfModified true
+    }
+
     task copyTestModel(type: Copy, dependsOn: downloadModelFile) {
         from project.ext.ASSET_DIR + '/mobilenetv1.tflite'
         into project.ext.TEST_ASSETS_DIR
     }
 
     preBuild.dependsOn downloadModelFile, downloadModelFile0, downloadModelFile1, downloadModelFile2,
-            copyTestModel
+            downloadSelfieSegmenter, copyTestModel
 } else {
     tasks.register('downloadModelFile') {}
     tasks.register('downloadModelFile0') {}
     tasks.register('downloadModelFile1') {}
     tasks.register('downloadModelFile2') {}
+    tasks.register('downloadSelfieSegmenter') {}
     tasks.register('copyTestModel') {}
 }

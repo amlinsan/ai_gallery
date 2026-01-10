@@ -17,6 +17,7 @@
 - **隐私优先**: 标签识别、人脸检测、Embedding 全部端侧完成。
 - **人物聚类与目录**: 已支持人物聚类，并提供人物目录页与人物相册浏览。
 - **美食/风景**: 已打通识别流程，后续仅需按体验反馈做细节优化与阈值校准。
+- **人物背景替换**: 已支持“更换背景”，使用端侧分割模型抠出人像，支持图片/纯色背景合成；生成新图不覆盖原图。
 
 ## 2. Agent 开发分工指引
 - **Data Agent (数据侧)**:
@@ -24,15 +25,18 @@
   - 如需新增人物聚类/人物相册的数据支持，应优先复用 `PersonEntity` 与 `FaceEmbedding`，并提供聚合查询（如：人物封面图、人数统计、最近更新时间）。
   - 任何数据库结构变更必须提供迁移，禁止破坏已有数据；查询必须可在 Flow 中稳定订阅。
   - 删除逻辑使用 MediaStore API，适配 Scoped Storage (IntentSender)，删除后同步 Room。
+  - 背景替换产物需作为新文件写入 MediaStore，并同步 Room；禁止覆盖原图。
 - **AI Agent (算法侧)**:
   - 负责标签识别 + 人脸检测/Embedding 的 WorkManager 后台任务（`TaggingWorker`）。
   - 若完善美食/风景识别：需更新标签映射（含中英文搜索映射）、阈值与模型输出对齐。
   - 若实现人物聚类：以增量方式更新 `PersonEntity`/`FaceEmbedding`，避免大规模离线重算；聚类阈值/合并逻辑需可配置且可回滚。
+  - 背景替换使用 TFLite/MediaPipe Selfie Segmentation（离线模型）输出人像 mask，并在端侧完成合成。
   - 必须端侧推理，禁止引入网络请求。
 - **UI Agent (视图侧)**:
   - 负责 XML 布局实现、ViewBinding 绑定、多语言适配及 ViewModel 状态驱动。
   - 现有导航结构为单 Activity + `GalleryFragment -> MediaGridFragment -> PhotoFragment`，并包含人物目录 `PersonGridFragment -> MediaGridFragment`；若新增其它导航页面，需先说明变更与影响范围并获得确认。
   - 删除交互需显式确认（系统弹窗），批量/智能分类删除需二次提示。
+  - 背景替换入口放在 `PhotoFragment`，需提供选择背景与处理进度/预览交互。
 
 ## 3. 技术栈约束 (Tech Stack Constraints)
 - **语言**: 100% Kotlin。
@@ -40,14 +44,16 @@
 - **异步与数据**: Coroutines + Flow + Room (唯一可信源)。
 - **图片加载**: Coil (Coroutines Image Loading)。
 - **后台任务**: WorkManager（`TaggingWorker` 为唯一 AI 入口）。
+- **分割模型**: TFLite/MediaPipe Selfie Segmentation（离线模型，打包进 assets）。
 - **日志规范**: 统一使用 `utils/MyLog`，Tag 固定为 `elink_aig`。
 
 ## 4. 编码规范 (Coding Standards)
 - **权限处理**: 媒体权限按上文适配范围处理（READ_MEDIA_IMAGES 等）。
-- **资源规范**: 严禁硬编码颜色、尺寸、字符串。所有文本需通过 `strings.xml` 支持中英文；详细规则见 `UI_UE_Design.md`。
+- **资源规范**: 严禁硬编码颜色、尺寸、字符串。所有文本需通过 `strings.xml` 支持中英文；详细规则见 `01-UI_UE_Design.md`。
 - **删除规范**: 禁止静默删除，必须经过系统级确认流程。
 - **错误处理**: I/O 与 AI 推理必须在 `Dispatchers.IO` 执行。
 - **标签规范**: 已使用的标签为 `Person` / `Food` / `Nature` / `Sky`；新增标签需同步更新 UI 分类标题与搜索映射。
+- **图像处理**: 抠图与合成需在 `Dispatchers.IO` 执行，大图必须缩放处理并及时释放 Bitmap，避免 OOM。
 
 ## 5. 禁止事项 (Negative Constraints)
 - 禁止在主线程进行数据库访问或图片解码。

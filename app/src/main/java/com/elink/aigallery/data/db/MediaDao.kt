@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
+import com.elink.aigallery.data.db.MediaTagAnalysis
 
 @Dao
 interface MediaDao {
@@ -40,40 +41,35 @@ interface MediaDao {
     )
     fun getImagesByFolder(): Flow<List<FolderWithImages>>
 
-    @Query(
-        """
-        SELECT m.* FROM media_items AS m
-        LEFT JOIN media_tag_analysis AS a ON m.id = a.mediaId
-        WHERE a.mediaId IS NULL
-        ORDER BY m.dateTaken DESC
+    @Query("""
+        SELECT * FROM media_items 
+        WHERE id NOT IN (SELECT mediaId FROM media_tag_analysis)
         LIMIT :limit
-        """
-    )
+    """)
     suspend fun getImagesWithoutTagAnalysis(limit: Int): List<MediaItem>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertMediaTagAnalysis(analysis: MediaTagAnalysis)
-
-    @Query(
-        """
-        SELECT m.* FROM media_items AS m
-        LEFT JOIN media_face_analysis AS f ON m.id = f.mediaId
-        WHERE f.mediaId IS NULL
-        ORDER BY m.dateTaken DESC
+    
+    @Query("""
+        SELECT * FROM media_items 
+        WHERE id NOT IN (SELECT mediaId FROM media_face_analysis)
         LIMIT :limit
-        """
-    )
+    """)
     suspend fun getImagesWithoutFaceAnalysis(limit: Int): List<MediaItem>
 
-    @Query(
-        """
-        SELECT DISTINCT m.* FROM media_items AS m
-        INNER JOIN image_tags AS t ON m.id = t.mediaId
-        WHERE t.label = :label
-        ORDER BY m.dateTaken DESC
-        """
-    )
-    fun getImagesByLabel(label: String): Flow<List<MediaItem>>
+    @Query("""
+        SELECT * FROM media_items 
+        WHERE id NOT IN (SELECT mediaId FROM image_embeddings)
+        LIMIT :limit
+    """)
+    suspend fun getImagesWithoutEmbedding(limit: Int): List<MediaItem>
+
+    @Query("""
+        SELECT * FROM media_items 
+        WHERE id IN (:ids)
+    """)
+    suspend fun getMediaItemsByIds(ids: List<Long>): List<MediaItem>
+
+    @Query("UPDATE media_items SET path = :path, dateTaken = :dateTaken, width = :width, height = :height WHERE mediaStoreId = :mediaStoreId")
+    suspend fun updateMediaItemInfo(path: String, mediaStoreId: Long, dateTaken: Long, width: Int, height: Int)
 
     @Query("DELETE FROM media_items WHERE path = :path")
     suspend fun deleteMediaItemByPath(path: String)
@@ -81,9 +77,17 @@ interface MediaDao {
     @Query("DELETE FROM media_items WHERE id IN (:ids)")
     suspend fun deleteMediaItems(ids: List<Long>)
 
-    @Query("SELECT * FROM media_items WHERE path = :path LIMIT 1")
+    @Query("SELECT * FROM media_items WHERE path = :path")
     suspend fun getMediaItemByPath(path: String): MediaItem?
 
-    @Query("UPDATE media_items SET mediaStoreId = :mediaStoreId, dateTaken = :dateTaken, width = :width, height = :height WHERE path = :path")
-    suspend fun updateMediaItemInfo(path: String, mediaStoreId: Long, dateTaken: Long, width: Int, height: Int): Int
+    @Query("""
+        SELECT DISTINCT m.* FROM media_items m
+        INNER JOIN image_tags t ON m.id = t.mediaId
+        WHERE t.label = :label
+        ORDER BY m.dateTaken DESC
+    """)
+    fun getImagesByLabel(label: String): Flow<List<MediaItem>>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsertMediaTagAnalysis(analysis: MediaTagAnalysis)
 }
