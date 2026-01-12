@@ -3,11 +3,13 @@ package com.elink.aigallery.ai
 import android.content.Context
 import android.graphics.Bitmap
 import com.elink.aigallery.utils.MyLog
-import org.tensorflow.lite.DataType
-import org.tensorflow.lite.support.image.TensorImage
-import org.tensorflow.lite.task.core.BaseOptions
-import org.tensorflow.lite.task.vision.segmenter.ImageSegmenter
-import org.tensorflow.lite.task.vision.segmenter.OutputType
+import com.google.mediapipe.framework.image.BitmapImageBuilder
+import com.google.mediapipe.framework.image.ByteBufferExtractor
+import com.google.mediapipe.framework.image.MPImage
+import com.google.mediapipe.tasks.core.BaseOptions
+import com.google.mediapipe.tasks.vision.core.RunningMode
+import com.google.mediapipe.tasks.vision.imagesegmenter.ImageSegmenter
+import java.nio.ByteOrder
 import java.util.Locale
 
 class SelfieSegmenterHelper private constructor(context: Context) {
@@ -22,23 +24,29 @@ class SelfieSegmenterHelper private constructor(context: Context) {
     fun segment(bitmap: Bitmap): SegmentationMask? {
         val localSegmenter = segmenter ?: return null
         return try {
-            val input = TensorImage.fromBitmap(bitmap)
-            val results = localSegmenter.segment(input)
-            val segmentation = results.firstOrNull() ?: return null
-            val masks = segmentation.masks
-            if (masks.isEmpty()) return null
-
-            val mask = selectPersonMask(segmentation.masks, segmentation.coloredLabels)
-            val buffer = mask.tensorBuffer
-            val floatMask = when (buffer.dataType) {
-                DataType.UINT8 -> buffer.intArray.map { it / 255f }.toFloatArray()
-                else -> buffer.floatArray
+            val mpImage = BitmapImageBuilder(bitmap).build()
+            val result = localSegmenter.segment(mpImage)
+            val personIndex = findPersonLabelIndex(localSegmenter.labels)
+            val confidenceMasks = result.confidenceMasks().orElse(null)
+            val fallbackIndex = personIndex ?: PERSON_CATEGORY_ID
+            val confidenceMask = when {
+                confidenceMasks != null && confidenceMasks.size > fallbackIndex ->
+                    confidenceMasks[fallbackIndex]
+                confidenceMasks != null && confidenceMasks.isNotEmpty() ->
+                    confidenceMasks.first()
+                else -> null
             }
-            SegmentationMask(
-                values = floatMask,
-                width = mask.width,
-                height = mask.height
-            )
+            if (confidenceMask != null) {
+                buildMaskFromConfidence(confidenceMask, bitmap.width, bitmap.height)
+                    ?.let { return it }
+            }
+
+            val categoryMask = result.categoryMask().orElse(null)
+            if (categoryMask == null) {
+                MyLog.w(TAG, "Segmentation returned empty masks")
+                return null
+            }
+            buildMaskFromCategory(categoryMask, bitmap.width, bitmap.height, personIndex)
         } catch (e: Exception) {
             MyLog.e(TAG, "Selfie segmentation failed", e)
             null
@@ -51,31 +59,80 @@ class SelfieSegmenterHelper private constructor(context: Context) {
 
     private fun createSegmenter(context: Context): ImageSegmenter {
         val baseOptions = BaseOptions.builder()
-            .setNumThreads(NUM_THREADS)
+            .setModelAssetPath(MODEL_FILE)
             .build()
         val options = ImageSegmenter.ImageSegmenterOptions.builder()
             .setBaseOptions(baseOptions)
-            .setOutputType(OutputType.CONFIDENCE_MASK)
+            .setRunningMode(RunningMode.IMAGE)
+            .setOutputConfidenceMasks(true)
+            .setOutputCategoryMask(true)
             .build()
-        return ImageSegmenter.createFromFileAndOptions(
-            context.applicationContext,
-            MODEL_FILE,
-            options
-        )
+        return ImageSegmenter.createFromOptions(context.applicationContext, options)
     }
 
-    private fun selectPersonMask(
-        masks: List<TensorImage>,
-        labels: List<org.tensorflow.lite.task.vision.segmenter.ColoredLabel>
-    ): TensorImage {
-        if (masks.size == 1 || labels.isEmpty()) {
-            return masks[0]
+    private fun buildMaskFromCategory(
+        maskImage: MPImage,
+        fallbackWidth: Int,
+        fallbackHeight: Int,
+        personIndex: Int?
+    ): SegmentationMask? {
+        val width = if (maskImage.width > 0) maskImage.width else fallbackWidth
+        val height = if (maskImage.height > 0) maskImage.height else fallbackHeight
+        val total = width * height
+        val buffer = ByteBufferExtractor.extract(maskImage, MPImage.IMAGE_FORMAT_ALPHA)
+        if (buffer == null || !buffer.hasRemaining()) {
+            MyLog.w(TAG, "Segmentation mask buffer unavailable")
+            return null
         }
-        val index = labels.indexOfFirst {
-            val name = "${it.displayName}".lowercase(Locale.US)
-            name.contains(PERSON_LABEL) || name.contains(FOREGROUND_LABEL)
-        }.let { if (it >= 0 && it < masks.size) it else masks.lastIndex }
-        return masks[index]
+        buffer.rewind()
+        val values = FloatArray(total)
+        if (buffer.remaining() < total) {
+            MyLog.w(TAG, "Segmentation mask buffer too small size=${buffer.remaining()} need=$total")
+            return null
+        }
+        for (i in 0 until total) {
+            val label = buffer.get().toInt() and 0xFF
+            values[i] = if (personIndex != null) {
+                if (label == personIndex) 1f else 0f
+            } else {
+                if (label == 0) 0f else 1f
+            }
+        }
+        return SegmentationMask(values, width, height)
+    }
+
+    private fun findPersonLabelIndex(labels: List<String>): Int? {
+        if (labels.isEmpty()) return null
+        return labels.indexOfFirst { label ->
+            val normalized = label.lowercase(Locale.US)
+            normalized.contains(PERSON_LABEL) || normalized.contains(FOREGROUND_LABEL)
+        }.takeIf { it >= 0 }
+    }
+
+    private fun buildMaskFromConfidence(
+        maskImage: MPImage,
+        fallbackWidth: Int,
+        fallbackHeight: Int
+    ): SegmentationMask? {
+        val width = if (maskImage.width > 0) maskImage.width else fallbackWidth
+        val height = if (maskImage.height > 0) maskImage.height else fallbackHeight
+        val total = width * height
+        val buffer = ByteBufferExtractor.extract(maskImage, MPImage.IMAGE_FORMAT_VEC32F1)
+        if (buffer == null || !buffer.hasRemaining()) {
+            MyLog.w(TAG, "Segmentation confidence buffer unavailable")
+            return null
+        }
+        buffer.order(ByteOrder.nativeOrder())
+        val floatBuffer = buffer.asFloatBuffer()
+        if (floatBuffer.remaining() < total) {
+            MyLog.w(TAG, "Segmentation confidence buffer too small size=${floatBuffer.remaining()} need=$total")
+            return null
+        }
+        val values = FloatArray(total)
+        for (i in 0 until total) {
+            values[i] = floatBuffer.get().coerceIn(0f, 1f)
+        }
+        return SegmentationMask(values, width, height)
     }
 
     data class SegmentationMask(
@@ -87,7 +144,7 @@ class SelfieSegmenterHelper private constructor(context: Context) {
     companion object {
         private const val TAG = "SelfieSegmenterHelper"
         private const val MODEL_FILE = "selfie_segmenter.tflite"
-        private const val NUM_THREADS = 2
+        private const val PERSON_CATEGORY_ID = 1
         private const val PERSON_LABEL = "person"
         private const val FOREGROUND_LABEL = "foreground"
 

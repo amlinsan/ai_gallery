@@ -36,6 +36,7 @@
     <color name="icon_tint_unselected">#555555</color>
     <color name="bg_circle_semitransparent">#40000000</color>
     <color name="icon_on_dark">#FFFFFF</color>
+    <color name="text_on_overlay">#FFFFFF</color>
     <color name="bg_replace_overlay">#80000000</color>
     <color name="bg_replace_color_blue">#4DA3FF</color>
     <color name="bg_replace_color_green">#34C759</color>

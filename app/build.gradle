@@ -123,6 +123,7 @@ dependencies {
     // Import the GPU delegate plugin Library for GPU inference
     implementation 'org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.0'
     implementation 'org.tensorflow:tensorflow-lite-gpu:2.9.0'
+    implementation 'com.google.mediapipe:tasks-vision:0.10.14'
 
     // Room (local database)
     def room_version = "2.6.1"
@@ -144,6 +145,7 @@ dependencies {
 
     // TFLite runtime (for face embedding)
     implementation "org.tensorflow:tensorflow-lite:2.9.0"
+    implementation "org.tensorflow:tensorflow-lite-select-tf-ops:2.9.0"
 
     // Lifecycle + RecyclerView
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0"

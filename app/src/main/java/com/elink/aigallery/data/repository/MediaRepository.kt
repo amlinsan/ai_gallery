@@ -15,6 +15,8 @@ import com.elink.aigallery.utils.MyLog
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 import androidx.room.withTransaction
 import java.util.concurrent.TimeUnit
@@ -55,19 +57,19 @@ class MediaRepository(private val context: Context) {
     }
     
     // Fixed implementation
-    suspend fun semanticSearch(text: String, limit: Int = 50): List<MediaItem> {
+    suspend fun semanticSearch(text: String, limit: Int = 50): List<MediaItem> = withContext(Dispatchers.IO) {
         val clipHelper = com.elink.aigallery.ai.ClipHelper.getInstance(context)
-        val textEmbedding = clipHelper.embedText(text) ?: return emptyList()
+        val textEmbedding = clipHelper.embedText(text) ?: return@withContext emptyList()
 
         val allEmbeddings = imageEmbeddingDao.getAllEmbeddings()
-        if (allEmbeddings.isEmpty()) return emptyList()
+        if (allEmbeddings.isEmpty()) return@withContext emptyList()
 
         // Compute similarities
         val scores = allEmbeddings.map { entity ->
             val floatBuffer = java.nio.ByteBuffer.wrap(entity.embedding).asFloatBuffer()
             val imgVector = FloatArray(entity.embeddingDim)
             floatBuffer.get(imgVector)
-            
+
             val score = dotProduct(textEmbedding, imgVector)
             Pair(entity.mediaId, score)
         }
@@ -77,13 +79,13 @@ class MediaRepository(private val context: Context) {
             .take(limit)
             .map { it.first }
 
-        if (topIds.isEmpty()) return emptyList()
+        if (topIds.isEmpty()) return@withContext emptyList()
 
         // Fetch MediaItems (preserving order is tricky with SQL IN, so we re-sort in memory)
         val items = mediaDao.getMediaItemsByIds(topIds)
         val itemMap = items.associateBy { it.id }
-        
-        return topIds.mapNotNull { itemMap[it] }
+
+        topIds.mapNotNull { itemMap[it] }
     }
 
     private fun dotProduct(v1: FloatArray, v2: FloatArray): Float {

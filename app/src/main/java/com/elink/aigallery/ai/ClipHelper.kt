@@ -3,7 +3,8 @@ package com.elink.aigallery.ai
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.util.Log
+import com.elink.aigallery.utils.MyLog
+import org.tensorflow.lite.DataType
 import org.tensorflow.lite.Interpreter
 import java.io.FileInputStream
 import java.nio.ByteBuffer
@@ -15,41 +16,79 @@ class ClipHelper private constructor(context: Context) {
 
     private var imageInterpreter: Interpreter? = null
     private var textInterpreter: Interpreter? = null
+    private var tokenizer: ClipTokenizer? = null
     
-    // Config for standard CLIP (ViT-B/32 or similar mobile variants)
-    private val IMAGE_INPUT_SIZE = 224
+    // Config
+    private var imageInputSize = 224 // Default, will be overwritten by model
     private val EMBEDDING_SIZE = 512
-    private val CONTEXT_LENGTH = 77 // Standard CLIP max token length
+    private var textContextLength = 77
+    private var textInputIsInt64 = false
 
     // Buffers
-    private val imageInputBuffer: ByteBuffer
+    private var imageInputBuffer: ByteBuffer
     private val imageOutputBuffer: Array<FloatArray>
-    private val textInputBuffer: Array<IntArray> // [1, 77]
+    private var textInputIntBuffer: Array<IntArray>? = null
+    private var textInputLongBuffer: Array<LongArray>? = null
     private val textOutputBuffer: Array<FloatArray>
 
     init {
-        // Initialize Interpreters safely
+        // Initialize Interpreters
+        var loadedImageInterpreter: Interpreter? = null
         try {
-            imageInterpreter = Interpreter(loadModelFile(context, "clip_image_encoder.tflite"))
-            Log.d(TAG, "CLIP Image Encoder loaded successfully.")
+            loadedImageInterpreter = Interpreter(loadModelFile(context, "clip_image_encoder.tflite"))
+            MyLog.i(TAG, "CLIP image encoder loaded.")
+            
+            // Read input shape from model (index 0)
+            val inputTensor = loadedImageInterpreter.getInputTensor(0)
+            val inputShape = inputTensor.shape() // [1, 224, 224, 3] or similar
+            // Usually shape is [batch, height, width, channels]
+            if (inputShape.size == 4) {
+                imageInputSize = inputShape[1] // Assuming Square: Height
+                MyLog.i(TAG, "Model input size detected: $imageInputSize")
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to load CLIP Image Encoder: ${e.message}")
+            MyLog.e(TAG, "Failed to load CLIP image encoder: ${e.message}", e)
         }
+        imageInterpreter = loadedImageInterpreter
 
         try {
             textInterpreter = Interpreter(loadModelFile(context, "clip_text_encoder.tflite"))
-            Log.d(TAG, "CLIP Text Encoder loaded successfully.")
+            MyLog.i(TAG, "CLIP text encoder loaded.")
+            val inputTensor = textInterpreter?.getInputTensor(0)
+            if (inputTensor != null) {
+                val inputShape = inputTensor.shape()
+                if (inputShape.size >= 2) {
+                    textContextLength = inputShape[1]
+                }
+                textInputIsInt64 = inputTensor.dataType() == DataType.INT64
+                MyLog.i(
+                    TAG,
+                    "CLIP text input detected: len=$textContextLength type=${inputTensor.dataType()}"
+                )
+            }
         } catch (e: Exception) {
-            Log.e(TAG, "Failed to load CLIP Text Encoder: ${e.message}")
+            MyLog.e(TAG, "Failed to load CLIP text encoder: ${e.message}", e)
         }
 
-        // 4 bytes * H * W * 3 (RGB)
-        imageInputBuffer = ByteBuffer.allocateDirect(4 * IMAGE_INPUT_SIZE * IMAGE_INPUT_SIZE * 3)
+        try {
+            tokenizer = ClipTokenizer(context, contextLength = textContextLength)
+            MyLog.i(TAG, "CLIP tokenizer loaded.")
+        } catch (e: Exception) {
+            MyLog.e(TAG, "Failed to load CLIP tokenizer: ${e.message}", e)
+        }
+
+        // Allocate Buffer based on detected size
+        // 4 bytes (float) * H * W * 3 (RGB)
+        imageInputBuffer = ByteBuffer.allocateDirect(4 * imageInputSize * imageInputSize * 3)
             .order(ByteOrder.nativeOrder())
         
         imageOutputBuffer = Array(1) { FloatArray(EMBEDDING_SIZE) }
         
-        textInputBuffer = Array(1) { IntArray(CONTEXT_LENGTH) }
+        if (textInputIsInt64) {
+            textInputLongBuffer = Array(1) { LongArray(textContextLength) }
+        } else {
+            textInputIntBuffer = Array(1) { IntArray(textContextLength) }
+        }
         textOutputBuffer = Array(1) { FloatArray(EMBEDDING_SIZE) }
     }
 
@@ -62,8 +101,8 @@ class ClipHelper private constructor(context: Context) {
 
         imageInputBuffer.rewind()
         
-        // Resize
-        val resized = Bitmap.createScaledBitmap(bitmap, IMAGE_INPUT_SIZE, IMAGE_INPUT_SIZE, true)
+        // Resize to model's expected size
+        val resized = Bitmap.createScaledBitmap(bitmap, imageInputSize, imageInputSize, true)
         
         // Normalize (Standard CLIP mean/std)
         // Mean: [0.48145466, 0.4578275, 0.40821073]
@@ -71,8 +110,8 @@ class ClipHelper private constructor(context: Context) {
         val mean = floatArrayOf(0.48145466f, 0.4578275f, 0.40821073f)
         val std = floatArrayOf(0.26862954f, 0.26130258f, 0.27577711f)
 
-        for (y in 0 until IMAGE_INPUT_SIZE) {
-            for (x in 0 until IMAGE_INPUT_SIZE) {
+        for (y in 0 until imageInputSize) {
+            for (x in 0 until imageInputSize) {
                 val pixel = resized.getPixel(x, y)
                 // RGB order
                 val r = (Color.red(pixel) / 255.0f - mean[0]) / std[0]
@@ -101,51 +140,28 @@ class ClipHelper private constructor(context: Context) {
         if (textInterpreter == null) return null
 
         // 1. Tokenize
-        val tokens = simpleTokenizer(text)
+        val tokens = tokenizer?.encode(text) ?: return null
         
         // 2. Fill Input Buffer
-        for (i in 0 until CONTEXT_LENGTH) {
-            textInputBuffer[0][i] = if (i < tokens.size) tokens[i] else 0 // Padding with 0
-        }
+        if (textInputIsInt64) {
+            val longInput = textInputLongBuffer ?: return null
+            for (i in 0 until textContextLength) {
+                longInput[0][i] = tokens[i].toLong()
+            }
 
-        // 3. Run Inference
-        textInterpreter?.run(textInputBuffer, textOutputBuffer)
+            // 3. Run Inference
+            textInterpreter?.run(longInput, textOutputBuffer)
+        } else {
+            val intInput = textInputIntBuffer ?: return null
+            for (i in 0 until textContextLength) {
+                intInput[0][i] = tokens[i]
+            }
+
+            // 3. Run Inference
+            textInterpreter?.run(intInput, textOutputBuffer)
+        }
         
         return normalizeVector(textOutputBuffer[0].clone())
-    }
-
-    /**
-     * A PLACEHOLDER Tokenizer.
-     * Real CLIP requires a BPE tokenizer with a vocabulary file.
-     * This simply maps characters/words to hash codes for demonstration
-     * or assumes a very specific simple model.
-     * 
-     * TODO: Implement real BPE Tokenizer loading 'vocab.json'
-     */
-    private fun simpleTokenizer(text: String): IntArray {
-        // Start token (49406) and End token (49407) are standard for CLIP
-        val startToken = 49406
-        val endToken = 49407
-        
-        val words = text.lowercase().split("\\s+".toRegex())
-        val tokenList = mutableListOf<Int>()
-        
-        tokenList.add(startToken)
-        // Very naive mapping for prototype
-        for (word in words) {
-            // Ideally: lookup word in map
-            // Here: Just a stable hash to prevent crash, likely meaningless for the model
-            val token = (word.hashCode() % 10000 + 10000) % 10000 
-            tokenList.add(token)
-        }
-        tokenList.add(endToken)
-        
-        // Truncate if too long
-        return if (tokenList.size > CONTEXT_LENGTH) {
-             tokenList.take(CONTEXT_LENGTH).toIntArray()
-        } else {
-             tokenList.toIntArray()
-        }
     }
 
     private fun normalizeVector(v: FloatArray): FloatArray {

@@ -34,3 +34,6 @@ out/
 # OS / editor
 .DS_Store
 .vscode/
+
+# AI Models
+app/src/main/assets/*.tflite

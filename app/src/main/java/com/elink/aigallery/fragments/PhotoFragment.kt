@@ -25,6 +25,7 @@ import com.elink.aigallery.databinding.DialogBgReplacePreviewBinding
 import com.elink.aigallery.databinding.FragmentPhotoBinding
 import com.elink.aigallery.ui.gallery.GalleryViewModel
 import com.elink.aigallery.ui.gallery.PhotoPagerAdapter
+import com.elink.aigallery.utils.MyLog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -137,10 +138,12 @@ class PhotoFragment : Fragment() {
         if (isProcessing) return
         isProcessing = true
         binding.bgReplaceOverlay.isVisible = true
+        MyLog.i(TAG, "bg replace start path=${item.path} option=${option.describe()}")
 
         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
             val foreground = decodeScaledBitmap(item.path, MAX_BG_REPLACE_EDGE)
             if (foreground == null) {
+                MyLog.w(TAG, "bg replace decode foreground failed path=${item.path}")
                 notifyReplaceFailed()
                 return@launch
             }
@@ -149,6 +152,7 @@ class PhotoFragment : Fragment() {
                 is BackgroundOption.Image -> loadBackgroundFromUri(option.uri, foreground.width, foreground.height)
             }
             if (background == null) {
+                MyLog.w(TAG, "bg replace decode background failed option=${option.describe()}")
                 foreground.recycle()
                 notifyReplaceFailed()
                 return@launch
@@ -157,6 +161,7 @@ class PhotoFragment : Fragment() {
             val segmenter = SelfieSegmenterHelper.getInstance(requireContext())
             val mask = segmenter.segment(foreground)
             if (mask == null) {
+                MyLog.w(TAG, "bg replace segmentation returned null path=${item.path}")
                 foreground.recycle()
                 background.recycle()
                 notifyReplaceFailed()
@@ -166,6 +171,7 @@ class PhotoFragment : Fragment() {
             val output = composeBackground(foreground, background, mask)
             foreground.recycle()
             background.recycle()
+            MyLog.i(TAG, "bg replace compose done size=${output.width}x${output.height} mask=${mask.width}x${mask.height}")
 
             withContext(Dispatchers.Main) {
                 binding.bgReplaceOverlay.isVisible = false
@@ -230,7 +236,8 @@ class PhotoFragment : Fragment() {
                 inPreferredConfig = Bitmap.Config.ARGB_8888
             }
             BitmapFactory.decodeFile(path, decodeOptions)
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            MyLog.e(TAG, "bg replace decode failed path=$path", e)
             null
         }
     }
@@ -269,7 +276,8 @@ class PhotoFragment : Fragment() {
                 }
                 scaled
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            MyLog.e(TAG, "bg replace decode background uri=$uri", e)
             null
         }
     }
@@ -321,9 +329,17 @@ class PhotoFragment : Fragment() {
     private sealed class BackgroundOption {
         data class Image(val uri: Uri) : BackgroundOption()
         data class Color(val color: Int) : BackgroundOption()
+
+        fun describe(): String {
+            return when (this) {
+                is Image -> "image"
+                is Color -> "color"
+            }
+        }
     }
 
     companion object {
+        private const val TAG = "PhotoFragment"
         private const val MAX_BG_REPLACE_EDGE = 1440
     }
 }

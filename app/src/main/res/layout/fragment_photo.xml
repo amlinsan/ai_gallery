@@ -58,11 +58,13 @@
             <ProgressBar
                 style="?android:attr/progressBarStyleLarge"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:indeterminateTint="@color/text_on_overlay"
+                android:indeterminateTintMode="src_in" />
 
             <TextView
                 android:id="@+id/bg_replace_loading_text"
-                style="@style/GalleryEmptyMessageStyle"
+                style="@style/GalleryOverlayMessageStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_s"
