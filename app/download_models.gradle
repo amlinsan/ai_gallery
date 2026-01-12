@@ -71,8 +71,14 @@ if (!skipModelDownload) {
         into project.ext.TEST_ASSETS_DIR
     }
 
+    // Execute get_models.sh to download large models excluded from git
+    task downloadLargeModels(type: Exec) {
+        workingDir project.rootDir
+        commandLine 'bash', '-c', './get_models.sh'
+    }
+
     preBuild.dependsOn downloadModelFile, downloadModelFile0, downloadModelFile1, downloadModelFile2,
-            downloadSelfieSegmenter, copyTestModel
+            copyTestModel, downloadLargeModels
 } else {
     tasks.register('downloadModelFile') {}
     tasks.register('downloadModelFile0') {}
