@@ -37,3 +37,6 @@ out/
 
 # AI Models
 app/src/main/assets/*.tflite
+
+# Build Artifacts
+*.apk
