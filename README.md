@@ -1,4 +1,4 @@
-# 🖼️ Elink AI Gallery | 智能离线相册
+# 🖼️ AI Gallery | 智能离线相册
 
 [![Android](https://img.shields.io/badge/Platform-Android-green.svg)](https://www.android.com)
 [![Kotlin](https://img.shields.io/badge/Language-Kotlin-purple.svg)](https://kotlinlang.org)
@@ -65,6 +65,25 @@ chmod +x get_models.sh
 ```
 
 > **注意**：脚本会自动将 `clip_image_encoder.tflite`, `clip_text_encoder.tflite` 等文件下载到 `app/src/main/assets/` 目录。如果下载失败，请检查网络连接。
+
+#### 模型/资源来源清单
+
+以下为项目涉及的模型与相关资源文件来源（含脚本下载与手动准备项）：
+
+- `mobilenetv1.tflite`：https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/image_classification/android/mobilenet_v1_1.0_224_quantized_1_metadata_1.tflite
+- `efficientnet-lite0.tflite`：https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/image_classification/android/efficientnet_lite0_int8_2.tflite
+- `efficientnet-lite1.tflite`：https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/image_classification/android/efficientnet_lite1_int8_2.tflite
+- `efficientnet-lite2.tflite`（可选）：https://storage.googleapis.com/download.tensorflow.org/models/tflite/task_library/image_classification/android/efficientnet_lite2_int8_2.tflite
+- `selfie_segmenter.tflite`：https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite
+- `clip_text_encoder.tflite`：https://huggingface.co/qualcomm/OpenAI-Clip/resolve/main/CLIPTextEncoder.tflite
+- `clip_image_encoder.tflite`：https://huggingface.co/qualcomm/OpenAI-Clip/resolve/main/CLIPImageEncoder.tflite
+- `face_embedding.tflite`（文件名来自重命名）：https://raw.githubusercontent.com/shubham0204/OnDevice-Face-Recognition-Android/master/app/src/main/assets/facenet.tflite
+- `bpe_simple_vocab_16e6.txt.gz`：https://github.com/openai/CLIP/raw/main/bpe_simple_vocab_16e6.txt.gz
+- `vocab.json`（可选，BPE 词表扩展）：https://huggingface.co/openai/clip-vit-base-patch32/resolve/main/vocab.json
+
+说明：
+1. `app/download_models.gradle` 中 CLIP 的 URL 是占位示例，实际使用请以 `get_models.sh` 为准。
+2. `app/download_models.gradle` 里 `selfie_segmenter.tflite` 也提供了固定版本地址（`.../float16/1/...`），以脚本下载的 `latest` 为默认。
 
 ### 3. 构建与运行
 
